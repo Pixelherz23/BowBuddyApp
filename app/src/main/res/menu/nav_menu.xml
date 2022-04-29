@@ -15,5 +15,9 @@
         android:title="Friends">
 
     </item>
+    <item
+        android:id="@+id/mi_logout"
+        android:icon="@android:drawable/ic_lock_power_off"
+        android:title="Abmelden"/>
 
 </menu>

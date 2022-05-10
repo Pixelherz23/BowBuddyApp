@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="et_target1" type="id"/>
+    <item name="et_target2" type="id"/>
+    <item name="et_target3" type="id"/>
+    <item name="et_target4" type="id"/>
+    <item name="et_target5" type="id"/>
+
+
+</resources>

@@ -3,17 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/IDE-Workspaces/AndroidStudio-Workspace/BowBuddyApp/app/src/main/res/drawable-anydpi/ic_save.xml" value="0.1685" />
+        <entry key="..\:/IDE-Workspaces/AndroidStudio-Workspace/BowBuddyApp/app/src/main/res/drawable/custom_button.xml" value="0.1445" />
+        <entry key="..\:/IDE-Workspaces/AndroidStudio-Workspace/BowBuddyApp/app/src/main/res/layout/activity_create_parcours.xml" value="0.264" />
+        <entry key="..\:/IDE-Workspaces/AndroidStudio-Workspace/BowBuddyApp/app/src/main/res/layout/activity_main.xml" value="0.22644927536231885" />
+        <entry key="..\:/IDE-Workspaces/AndroidStudio-Workspace/BowBuddyApp/app/src/main/res/layout/activity_station_setup.xml" value="0.2" />
+        <entry key="..\:/IDE-Workspaces/AndroidStudio-Workspace/BowBuddyApp/app/src/main/res/layout/custom_alertdialog.xml" value="0.2" />
+        <entry key="..\:/IDE-Workspaces/AndroidStudio-Workspace/BowBuddyApp/app/src/main/res/layout/fragment_home.xml" value="0.22644927536231885" />
+        <entry key="..\:/IDE-Workspaces/AndroidStudio-Workspace/BowBuddyApp/app/src/main/res/layout/fragment_statistics.xml" value="0.22644927536231885" />
+        <entry key="..\:/IDE-Workspaces/AndroidStudio-Workspace/BowBuddyApp/app/src/main/res/layout/fragment_statistics_.xml" value="0.1721014492753623" />
         <entry key="..\:/IDE-Workspaces/AndroidStudio-Workspace/BowBuddyApp/app/src/main/res/layout/item_parcours_card.xml" value="0.22644927536231885" />
         <entry key="..\:/IDE-Workspaces/AndroidStudio-Workspace/BowBuddyApp/app/src/main/res/layout/nav_header.xml" value="0.22644927536231885" />
-        <entry key="..\:/Users/lukas/StudioProjects/BowBuddyApp/app/src/main/res/layout/activity_create_parcours.xml" value="0.3692708333333333" />
-        <entry key="..\:/Users/lukas/StudioProjects/BowBuddyApp/app/src/main/res/layout/activity_main.xml" value="0.536" />
-        <entry key="..\:/Users/lukas/StudioProjects/BowBuddyApp/app/src/main/res/layout/activity_sign_in.xml" value="0.3692708333333333" />
-        <entry key="..\:/Users/lukas/StudioProjects/BowBuddyApp/app/src/main/res/layout/fragment_home.xml" value="0.3692708333333333" />
-        <entry key="..\:/Users/lukas/StudioProjects/BowBuddyApp/app/src/main/res/layout/fragment_statistics.xml" value="0.3692708333333333" />
-        <entry key="..\:/Users/lukas/StudioProjects/BowBuddyApp/app/src/main/res/layout/item_parcours_card.xml" value="0.3692708333333333" />
-        <entry key="..\:/Users/lukas/StudioProjects/BowBuddyApp/app/src/main/res/layout/nav_header.xml" value="0.3692708333333333" />
-        <entry key="..\:/Users/lukas/StudioProjects/BowBuddyApp/app/src/main/res/menu/create_parcours_bar_menu.xml" value="0.43854166666666666" />
-        <entry key="..\:/Users/lukas/StudioProjects/BowBuddyApp/app/src/main/res/menu/nav_menu.xml" value="0.43854166666666666" />
+        <entry key="..\:/IDE-Workspaces/AndroidStudio-Workspace/BowBuddyApp/app/src/main/res/menu/create_parcours_bar_menu.xml" value="0.48828125" />
+        <entry key="..\:/IDE-Workspaces/AndroidStudio-Workspace/BowBuddyApp/app/src/main/res/menu/nav_menu.xml" value="0.25416666666666665" />
+
       </map>
     </option>
   </component>

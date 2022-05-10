@@ -46,6 +46,14 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'com.google.android.material:material:1.5.0'
+    // Google Sign In
     implementation 'com.google.android.gms:play-services-auth:20.2.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    // Retrofit & OkHttp
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    //Croutine for aynchronus HTTP requests
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }

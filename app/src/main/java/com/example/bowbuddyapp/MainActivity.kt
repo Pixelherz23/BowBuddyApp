@@ -31,8 +31,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val homeFragment = HomeFragment()
-        val testFragment = TestFragment()
+
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestProfile().build()
         val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
         val acct = GoogleSignIn.getLastSignedInAccount(this)
@@ -49,6 +48,19 @@ class MainActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.tvGoogleName).text = acct.displayName
             findViewById<TextView>(R.id.tvGoogleEmail).text = acct.email
         }
+
+
+
+        val homeFragment = HomeFragment(this)
+
+        val testFragment = StatisticsFragment()
+
+        homeFragment.initParcours.add(ParcoursCard("StaticDummy",
+            12,
+            "Musterstraße",
+            "Musterhause",
+            "Zusatzinfo",
+            12))
 
 
         //Init the container with the homeFragment

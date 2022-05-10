@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 
 //Fragment(R.layout.fragment_home) does the same as on Create View
-class TestFragment : Fragment(R.layout.fragment_statistics) {
+class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
 
 

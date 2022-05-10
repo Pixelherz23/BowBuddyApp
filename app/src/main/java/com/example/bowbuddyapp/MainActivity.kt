@@ -3,10 +3,7 @@ package com.example.bowbuddyapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -20,8 +17,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        val homeFragment = HomeFragment()
-        val testFragment = TestFragment()
+        val homeFragment = HomeFragment(this)
+
+        val testFragment = StatisticsFragment()
+
+        homeFragment.initParcours.add(ParcoursCard("StaticDummy",
+            12,
+            "Musterstraße",
+            "Musterhause",
+            "Zusatzinfo",
+            12))
 
         //Init the container with the homeFragment
         //Isnt R.id unessacry cause kotlinx impport like for  nav_View

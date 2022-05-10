@@ -51,4 +51,5 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
     //Croutine for aynchronus HTTP requests
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }

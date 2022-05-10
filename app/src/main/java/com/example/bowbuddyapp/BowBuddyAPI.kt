@@ -16,6 +16,10 @@ interface BowBuddyAPI {
     @POST("/api/v1/create")
     suspend fun createEmployee(@Body requestBody: RequestBody): Response<ResponseBody>
 
+    @GET("/api/v1/employees")
+    suspend fun getEmployees(): Response<ResponseBody>
+
+
 
 
 }

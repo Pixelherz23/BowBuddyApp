@@ -38,11 +38,12 @@ class CreateParcoursActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
+    /*
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.create_parcours_bar_menu, menu)
         return true
     }
+    */
 
 
 //dummy code for sending data to Server
@@ -55,25 +56,19 @@ class CreateParcoursActivity : AppCompatActivity() {
             .baseUrl(BASE_URL)
             .build()
         val service = retrofit.create(BowBuddyAPI::class.java)
-
         // Create JSON using JSONObject (dummy code to see if it works)
         val jsonObject = JSONObject()
         jsonObject.put("name", "Jack")
         jsonObject.put("salary", "3540")
         jsonObject.put("age", "23")
-
-
         val requestBody = jsonObject.toString().toRequestBody("application/json".toMediaTypeOrNull())
-
         //What is the difference between GlobalScope(Dispatchers.Main).launch and line 52
         CoroutineScope(Dispatchers.Main).launch {
             //fix for inappropriate blocking method call" for response.body()?.string().toString()
             kotlin.runCatching {
                 // Do the POST request and get response
                 val response = service.createEmployee(requestBody )
-
             if (response.isSuccessful) {
-
                 val jsonAsString = response.body()?.string().toString()
                 val result = JsonParser().parse(jsonAsString).asJsonObject
                 //Log.i("RETROFIT_NICE_jsonAsString", jsonAsString)
@@ -82,23 +77,18 @@ class CreateParcoursActivity : AppCompatActivity() {
                 finish()
             } else {
                 val errCode = response.code().toString()
-
                 Log.e("POST_Parcours_ERROR", errCode)
                 Toast.makeText(applicationContext, "Etwas ist falsch gelaufen: $errCode", Toast.LENGTH_SHORT).show()
             }
             }
         }
     }
-
 */
     /*
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.menu_item_save -> sendParcoursToServer()
-
         }
-
         return true
     }
 */
@@ -112,6 +102,7 @@ fun parcoursDataToJson(): JSONObject {
     jsonParcours.put("city", editText_city.text.toString())
     jsonParcours.put("inf", editText_info.text.toString())
     jsonParcours.put("amountOfStations",slider.value.toString())
+
 
     return jsonParcours
 

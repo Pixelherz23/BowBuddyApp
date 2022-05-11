@@ -20,9 +20,9 @@ import retrofit2.Retrofit
 
 
 class HomeFragment(context: Context) : Fragment() {
-
-
     val BASE_URL = "https://dummy.restapiexample.com"
+
+
     var initParcours = mutableListOf<ParcoursCard>()
 
     val adapter = ParcoursAdapter(initParcours, context)

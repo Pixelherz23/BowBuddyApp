@@ -10,7 +10,7 @@ import retrofit2.http.*
 //it is possible to use @Body requestBody: RequestBody. See https://square.github.io/retrofit/#api-declaration
 interface BowBuddyAPI {
 
-    @POST("/api/v1/create")
+    @POST("/createParcours")
     suspend fun createParcours(@Body requestBody: RequestBody): Response<ResponseBody>
 
     @POST("/api/v1/create")
@@ -18,6 +18,8 @@ interface BowBuddyAPI {
 
     @GET("/api/v1/employees")
     suspend fun getEmployees(): Response<ResponseBody>
+
+
 
 
 

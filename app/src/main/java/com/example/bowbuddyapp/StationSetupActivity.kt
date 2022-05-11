@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Retrofit
 
@@ -159,11 +160,11 @@ class StationSetupActivity : AppCompatActivity() {
         }
     }
     fun saveInputAndClearFields(jsob : JSONObject){
-        val arrTargetName = mutableListOf<String>()
+        val jsonArr = JSONArray()
         linearLayout_Targets.forEach {
 
             if (it is EditText) {
-                arrTargetName.add(it.text.toString())
+                jsonArr.put(it.text.toString())
                 it.setText(null)
 
             }
@@ -171,7 +172,7 @@ class StationSetupActivity : AppCompatActivity() {
         }
 
         var key = "st${stationCounter.toString()}"
-        jsob.put(key, arrTargetName)
+        jsob.put(key, jsonArr)
     }
 /*
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

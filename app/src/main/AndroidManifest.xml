@@ -13,8 +13,11 @@
         android:theme="@style/Theme.BowBuddyApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".PreGame"
+            android:exported="false" />
+        <activity
             android:name=".googleSignIn.SignInActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +29,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".StationSetupActivity"
             android:exported="false" />

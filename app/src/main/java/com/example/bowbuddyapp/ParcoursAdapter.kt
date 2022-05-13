@@ -11,10 +11,14 @@ import kotlinx.android.synthetic.main.item_parcours_card.view.*
 import kotlinx.android.synthetic.main.custom_alertdialog.view.*
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.view.View.inflate
 import android.widget.Button
 import android.widget.EditText
+import androidx.core.content.ContextCompat.startActivity
+import kotlinx.android.synthetic.main.activity_create_parcours.*
 import kotlinx.android.synthetic.main.activity_create_parcours.view.*
+import kotlinx.android.synthetic.main.activity_station_setup.*
 import kotlinx.coroutines.NonDisposableHandle.parent
 
 //Job of adapter: creating views for our items that have in our recycler
@@ -22,7 +26,7 @@ import kotlinx.coroutines.NonDisposableHandle.parent
 class ParcoursAdapter(var elem: List<ParcoursCard>, var context: Context) : RecyclerView.Adapter<ParcoursAdapter.AdapterHodl>()  {
 
     var alertDialogWindow = AlertDialog.Builder(context)
-
+    lateinit var view :View
 
     //holds the views of the items that are currently displayed
     inner class AdapterHodl(itemView: View): RecyclerView.ViewHolder(itemView)
@@ -57,19 +61,26 @@ class ParcoursAdapter(var elem: List<ParcoursCard>, var context: Context) : Recy
            // alertDialogWindow.setTitle(elem[position].parcoursName).setMessage("BlaBla").show()
             val builder = AlertDialog.Builder(context)
                 .setTitle(elem[position].parcoursName)
-                .setPositiveButton("Lets shoot", { _, _ ->
-                   Log.i("btn","Positve Alert Dialog Button clicked")
+                .setPositiveButton("Lets shoot") { _, _ ->
+                    Log.i("btn", "Positve Alert Dialog Button clicked")
 
+                    val intent = Intent(context, PreGame::class.java)
+                    context.startActivity(intent) //why does this works only with context? See line 38 in Create ParcoursActivity for example
                     //Todo logic
-                })
-                .setNegativeButton("Abbrechen", { dialog, _ ->
-                    Log.i("btn","Negative Alert Dialog Button clicked")
+                }
+                .setNegativeButton("Abbrechen") { dialog, _ ->
+                    Log.i("btn", "Negative Alert Dialog Button clicked")
                     //dialog.dismiss()
-                })
+                }
 
 
                 .create()
-            val view = LayoutInflater.from(context).inflate(R.layout.custom_alertdialog,null)
+
+
+
+
+
+            view = LayoutInflater.from(context).inflate(R.layout.custom_alertdialog,null)
 
             var city =elem[position].city
             var street=elem[position].street

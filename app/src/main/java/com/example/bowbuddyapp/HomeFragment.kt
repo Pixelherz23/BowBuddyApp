@@ -48,9 +48,9 @@ class HomeFragment(context: Context) : Fragment() {
             CoroutineScope(Dispatchers.Main).launch {
                 if (response.isSuccessful) {
 
-                    val jsonAsString = response.body()?.string().toString()
-                    val result = JsonParser().parse(jsonAsString).asJsonObject
-                    Log.i("Employee_Json",result.toString())
+                    //val jsonAsString = response.body()?.string().toString()
+                    //val result = JsonParser().parse(jsonAsString).asJsonObject
+                    //Log.i("Employee_Json",result.toString())
 
                     //Log.d("Pretty Printed JSON :", prettyJson)
 

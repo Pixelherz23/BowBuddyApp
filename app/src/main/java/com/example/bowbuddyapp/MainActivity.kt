@@ -55,13 +55,16 @@ class MainActivity : AppCompatActivity() {
 
         val testFragment = StatisticsFragment()
 
-        homeFragment.initParcours.add(ParcoursCard("StaticDummy",
-            12,
-            "Musterstraße",
-            "Musterhause",
-            "Zusatzinfo",
-            12))
 
+
+        for (i in 1..5) {
+            homeFragment.initParcours.add(ParcoursCard("StaticDummy$i",
+                12,
+                "Musterstraße",
+                "Musterhause",
+                "Zusatzinfo",
+                12))
+        }
 
         //Init the container with the homeFragment
         //Isnt R.id unessacry cause kotlinx impport like for  nav_View

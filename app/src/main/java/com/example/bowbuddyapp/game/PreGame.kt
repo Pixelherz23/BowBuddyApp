@@ -1,4 +1,4 @@
-package com.example.bowbuddyapp
+package com.example.bowbuddyapp.game
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,10 +7,11 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.content.res.ResourcesCompat
+import com.example.bowbuddyapp.R
 import kotlinx.android.synthetic.main.activity_create_parcours.*
 import kotlinx.android.synthetic.main.activity_pre_game.*
-import kotlinx.android.synthetic.main.activity_station_setup.*
-import kotlinx.android.synthetic.main.activity_station_setup.slider
+import org.json.JSONArray
+import org.json.JSONObject
 
 class PreGame : AppCompatActivity() {
     lateinit var gameRule : String
@@ -31,11 +32,13 @@ class PreGame : AppCompatActivity() {
             override fun onNothingSelected(p0: AdapterView<*>?) {
             }
         }
+
         sw_multiplayer.setOnCheckedChangeListener { _, isChecked ->
             multiplayerFlag = isChecked
             if(isChecked == true && itemFlag == false){
                 var imageBtn = ImageButton(applicationContext)
-                imageBtn.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_share,null ))
+                imageBtn.setImageDrawable(ResourcesCompat.getDrawable(resources,
+                    R.drawable.ic_share,null ))
                 imageBtn.setOnClickListener{
                     var intent = Intent(Intent.ACTION_SEND)
 
@@ -77,12 +80,14 @@ class PreGame : AppCompatActivity() {
                 // probably pass the parcoursid, so the next activity can make a request to get the Stations etc
 
 
-                val intent = Intent(applicationContext, null)
+                val intent = Intent(applicationContext,  GameActivity::class.java)
                 intent.putExtra("isMultiplayer",multiplayerFlag)
                 intent.putExtra("gameRule", gameRule)
                 startActivity(intent)
 
             }
     }
+//TODO This is a dummy method. replace with api call
+
 }
 

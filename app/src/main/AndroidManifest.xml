@@ -13,7 +13,10 @@
         android:theme="@style/Theme.BowBuddyApp"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".PreGame"
+            android:name=".game.GameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".game.PreGame"
             android:exported="false" />
         <activity
             android:name=".googleSignIn.SignInActivity"

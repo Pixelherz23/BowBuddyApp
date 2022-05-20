@@ -20,9 +20,9 @@ import retrofit2.Retrofit
 
 
 class HomeFragment(context: Context) : Fragment() {
-
-
     val BASE_URL = "https://dummy.restapiexample.com"
+
+
     var initParcours = mutableListOf<ParcoursCard>()
 
     val adapter = ParcoursAdapter(initParcours, context)
@@ -47,11 +47,12 @@ class HomeFragment(context: Context) : Fragment() {
 
             CoroutineScope(Dispatchers.Main).launch {
                 if (response.isSuccessful) {
-
+                    /*
                     val jsonAsString = response.body()?.string().toString()
                     val result = JsonParser().parse(jsonAsString).asJsonObject
                     Log.i("Employee_Json",result.toString())
 
+                     */
                     //Log.d("Pretty Printed JSON :", prettyJson)
 
                 } else {

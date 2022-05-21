@@ -1,15 +1,13 @@
-package com.example.bowbuddyapp.googleSignIn
+package com.example.bowbuddyapp.ui.main
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.example.bowbuddyapp.MainActivity
-import com.example.bowbuddyapp.R
+import com.example.bowbuddyapp.databinding.ActivitySignInBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -18,7 +16,8 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 
 
-class SignInActivity : AppCompatActivity() {
+class SignInActivity: AppCompatActivity() {
+    private lateinit var binding: ActivitySignInBinding
     private var mGoogleSignInClient: GoogleSignInClient? = null
     private var launcher: ActivityResultLauncher<Intent?> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -39,7 +38,8 @@ class SignInActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_in)
+        binding = ActivitySignInBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -48,13 +48,13 @@ class SignInActivity : AppCompatActivity() {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        val signInButton = findViewById<SignInButton>(R.id.sign_in_button)
-        signInButton.setSize(SignInButton.SIZE_STANDARD)
-
-        signInButton.setOnClickListener(){
-            signIn()
-        }
-
+        binding.apply {
+            signInButton.apply {
+                setSize(SignInButton.SIZE_STANDARD)
+                setOnClickListener(){
+                    signIn()
+                }
+        } }
     }
 
     override fun onStart() {

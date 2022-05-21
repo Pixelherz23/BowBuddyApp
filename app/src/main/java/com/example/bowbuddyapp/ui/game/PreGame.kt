@@ -1,29 +1,32 @@
-package com.example.bowbuddyapp.game
+package com.example.bowbuddyapp.ui.game
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import com.example.bowbuddyapp.R
-import kotlinx.android.synthetic.main.activity_create_parcours.*
-import kotlinx.android.synthetic.main.activity_pre_game.*
-import org.json.JSONArray
-import org.json.JSONObject
+import com.example.bowbuddyapp.databinding.ActivityPreGameBinding
+
 
 class PreGame : AppCompatActivity() {
+    private lateinit var binding: ActivityPreGameBinding
     lateinit var gameRule : String
     var itemFlag = false
     var multiplayerFlag = false
     val STATIC_DUMMY_LINK = "https://bowbuddy.de/STATICLINK"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pre_game)
+        binding = ActivityPreGameBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         //anonymous class
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(adapter: AdapterView<*>?, view: View?, indexOfItem: Int, idOfItem: Long) {
                 gameRule = adapter?.getItemAtPosition(indexOfItem).toString()
                 Log.i("Item", gameRule)
@@ -33,7 +36,7 @@ class PreGame : AppCompatActivity() {
             }
         }
 
-        sw_multiplayer.setOnCheckedChangeListener { _, isChecked ->
+        binding.swMultiplayer.setOnCheckedChangeListener { _, isChecked ->
             multiplayerFlag = isChecked
             if(isChecked == true && itemFlag == false){
                 var imageBtn = ImageButton(applicationContext)
@@ -41,7 +44,6 @@ class PreGame : AppCompatActivity() {
                     R.drawable.ic_share,null ))
                 imageBtn.setOnClickListener{
                     var intent = Intent(Intent.ACTION_SEND)
-
                     intent.putExtra(Intent.EXTRA_TEXT, STATIC_DUMMY_LINK)
                     intent.type = "text/plain"
                     startActivity(intent)
@@ -56,17 +58,21 @@ class PreGame : AppCompatActivity() {
                 invideLink.setText(STATIC_DUMMY_LINK)
                 invideLink.isFocusable = false
 
-
-                linearLayout_pregame_multiplayer.addView(temp)
-
-                linearLayout_horizontal.addView(invideLink)
-                linearLayout_horizontal.addView(imageBtn)
-
+                binding.linearLayoutHorizontal.apply {
+                    addView(temp)
+                    addView(invideLink)
+                    addView(imageBtn)
+                    addView(invideLink)
+                    addView(imageBtn)
+                }
 
                 itemFlag = true
             }else if(isChecked == false && itemFlag == true){
-                linearLayout_pregame_multiplayer.removeView(findViewById(R.id.tv_capital))
-                    linearLayout_horizontal.removeAllViewsInLayout()
+                binding.apply {
+                    linearLayoutPregameMultiplayer.removeView(findViewById(R.id.tv_capital))
+                    linearLayoutHorizontal.removeAllViewsInLayout()
+                }
+
                 itemFlag = false
             }
 
@@ -74,7 +80,7 @@ class PreGame : AppCompatActivity() {
             Log.i("MSG", message)
         }
 
-            btn_start.setOnClickListener {
+            binding.btnStart.setOnClickListener {
 
                 //TODO change null with next activity
                 // probably pass the parcoursid, so the next activity can make a request to get the Stations etc

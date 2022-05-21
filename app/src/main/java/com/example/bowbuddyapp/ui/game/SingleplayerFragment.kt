@@ -1,25 +1,27 @@
-package com.example.bowbuddyapp.game
+package com.example.bowbuddyapp.ui.game
 
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.bowbuddyapp.R
-import kotlinx.android.synthetic.main.fragment_singleplayer.*
+import com.example.bowbuddyapp.databinding.FragmentSingleplayerBinding
 import org.json.JSONArray
 import org.json.JSONObject
+import com.example.bowbuddyapp.data.Target
 
 
 class SingleplayerFragment(context: Context, gameRule : String) : Fragment() {
+    private var _binding: FragmentSingleplayerBinding? = null
+    private val binding get() = _binding!!
 
     var targets = mutableListOf<Target>()
-    val adapter = GameAdapter(targets, context, gameRule )
     var keyCounter = 0
-
+    var thiscontext = context
+    var thisgameRule = gameRule
     lateinit var jsonKeys : JSONArray
 
     var jsonStations = getParcoursMetaData()
@@ -33,7 +35,7 @@ class SingleplayerFragment(context: Context, gameRule : String) : Fragment() {
             val targetsArr = jsonStations.getJSONArray(jsonKeys.get(keyCounter).toString())
 
             for (i in 0 until targetsArr.length()) {
-              targets.add(Target(targetsArr.getString(i), jsonKeys.get(keyCounter).toString(), intArrayOf(0,0,0), 0))
+              //targets.add(com.example.bowbuddyapp.data.Target(targetsArr.getString(i), jsonKeys.get(keyCounter).toString(), intArrayOf(0,0,0), 0))
             }
         keyCounter++
 
@@ -59,42 +61,46 @@ class SingleplayerFragment(context: Context, gameRule : String) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        _binding = FragmentSingleplayerBinding.inflate(inflater, container, false)
 
-        return inflater.inflate(R.layout.fragment_singleplayer, container, false)
+        return binding.root
     }
 
 //TODO ad previous targets for server to json
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view_recycler_singleplayer.adapter = adapter
-        view_recycler_singleplayer.layoutManager = LinearLayoutManager(context)
+    val gameAdapter = GameAdapter()
 
-        btn_next_sp.setOnClickListener {
-            Log.i("Test", "Click")
-            targets.clear();
-            adapter.notifyDataSetChanged();
+        binding.apply {
+            viewRecyclerSingleplayer.apply {
+                adapter = gameAdapter
+                layoutManager = LinearLayoutManager(requireContext())
+            }
+            btnNextSp.setOnClickListener {
+                Log.i("Test", "Click")
+                targets.clear();
+                gameAdapter.notifyDataSetChanged()
 
 
-            jsonKeys= jsonStations.names()
+                jsonKeys= jsonStations.names()
 
-            val targetsArr = jsonStations.getJSONArray(jsonKeys.get(keyCounter).toString())
+                val targetsArr = jsonStations.getJSONArray(jsonKeys.get(keyCounter).toString())
 
 
-            for (i in 0 until targetsArr.length()) {
-                //mutableListOf<Target>()
-                targets.add(Target(targetsArr.getString(i), jsonKeys.get(keyCounter).toString(), intArrayOf(0,0,0), 0))
+                for (i in 0 until targetsArr.length()) {
+                    //mutableListOf<Target>()
+                    //targets.add(Target(targetsArr.getString(i), jsonKeys.get(keyCounter).toString(), intArrayOf(0,0,0), 0))
+
+                }
+                gameAdapter.notifyDataSetChanged();
+
+                Log.i("List", targets.toString())
+                keyCounter++
+
 
             }
-            adapter.notifyDataSetChanged();
-
-            Log.i("List", targets.toString())
-            keyCounter++
-
-
         }
-
-
     }
 //TODO replace this dummy with real call
     fun getParcoursMetaData():JSONObject {

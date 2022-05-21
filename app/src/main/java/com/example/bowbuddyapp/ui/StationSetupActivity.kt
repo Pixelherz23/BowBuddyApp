@@ -1,29 +1,18 @@
-package com.example.bowbuddyapp
+package com.example.bowbuddyapp.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
-import androidx.annotation.NonNull
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.core.view.size
-import com.google.android.material.slider.Slider
-import com.google.gson.JsonParser
-import kotlinx.android.synthetic.main.activity_create_parcours.*
-import kotlinx.android.synthetic.main.activity_station_setup.*
-import kotlinx.android.synthetic.main.activity_station_setup.slider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
+import com.example.bowbuddyapp.R
+import com.example.bowbuddyapp.databinding.ActivityStationSetupBinding
+import com.example.bowbuddyapp.ui.main.MainActivity
 import org.json.JSONArray
 import org.json.JSONObject
-import retrofit2.Retrofit
 
 
 //Todo
@@ -33,6 +22,7 @@ import retrofit2.Retrofit
 class StationSetupActivity : AppCompatActivity() {
     //val BASE_URL = "https://dummy.restapiexample.com"
     val BASE_URL = "https://59baf216-74eb-4959-9c0c-f38ed4849c5b.mock.pstmn.io"
+    private lateinit var binding: ActivityStationSetupBinding
 
     var amountOfStations = 0
     var stationCounter = 1
@@ -49,25 +39,27 @@ class StationSetupActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_station_setup)
+        binding = ActivityStationSetupBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         amountOfStations = intent.getIntExtra("amountOfStations", 1)
-        et_statinNo.setText("Station $stationCounter von $amountOfStations")
+        binding.etStatinNo.setText("Station $stationCounter von $amountOfStations")
         jsonParcours = JSONObject(intent.getStringExtra("json"))
 
             var a = EditText(applicationContext)
             a.hint = "Zielbezeichnung"
             //a.id = idList[0]
-            linearLayout_Targets.addView(a)
+            binding.linearLayoutTargets.addView(a)
 
         if(amountOfStations == stationCounter){
-            btn_nextStation.setText("Speichern")
+            binding.btnNextStation.setText("Speichern")
 
         }
 
 
 
         //If you only want the slider start and end value and don't care about the previous values
-        slider.addOnChangeListener { slider, value, fromUser ->
+        binding.slider.addOnChangeListener { slider, value, fromUser ->
             //val values = slider.value.toString()
             Log.i("Slider Val", value.toString())
             var sliderVal = value.toInt()
@@ -82,8 +74,7 @@ class StationSetupActivity : AppCompatActivity() {
                     var temp = EditText(applicationContext)
                     temp.hint = "Zielbezeichnung"
                     //temp.id = idList[0]
-                    linearLayout_Targets.addView(temp)
-
+                    binding.linearLayoutTargets.addView(temp)
                 }
                 //linearLayout_Targets.addView(EditText(applicationContext))
 
@@ -91,10 +82,10 @@ class StationSetupActivity : AppCompatActivity() {
 
             } else if (tempSliderCounter >= sliderVal) {
                 var removeViews = tempSliderCounter - sliderVal
-                var x = linearLayout_Targets.size - 1
+                var x = binding.linearLayoutTargets.size - 1
                 for (tempVal in 1..removeViews) {
 
-                    linearLayout_Targets.removeViewAt(x)
+                    binding.linearLayoutTargets.removeViewAt(x)
                     x--
                 }
 
@@ -103,10 +94,10 @@ class StationSetupActivity : AppCompatActivity() {
 
         }
 
-        btn_nextStation.setOnClickListener {
+        binding.btnNextStation.setOnClickListener {
             var flag = false
 
-            linearLayout_Targets.forEach {
+            binding.linearLayoutTargets.forEach {
 
                 if (it is EditText) {
                     if (it.text.isEmpty()) {
@@ -150,18 +141,18 @@ class StationSetupActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 if(amountOfStations ==( stationCounter +1)){
-                    btn_nextStation.setText("Speichern")
+                    binding.btnNextStation.setText("Speichern")
                 }
 
                      stationCounter++
-                et_statinNo.setText("Station $stationCounter von $amountOfStations")
+                binding.etStatinNo.setText("Station $stationCounter von $amountOfStations")
             }
 
         }
     }
     fun saveInputAndClearFields(jsob : JSONObject){
         val jsonArr = JSONArray()
-        linearLayout_Targets.forEach {
+        binding.linearLayoutTargets.forEach {
 
             if (it is EditText) {
                 jsonArr.put(it.text.toString())
@@ -190,44 +181,7 @@ class StationSetupActivity : AppCompatActivity() {
 
     //dummy code for sending data to Server
     fun sendJsonToServer(jsonObj : JSONObject) {
-        Log.i("Json:", jsonObj.toString(2))
-        // Create Retrofit
-        val retrofit = Retrofit.Builder()
-            //.addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(BASE_URL)
-            .build()
-        val service = retrofit.create(BowBuddyAPI::class.java)
 
-        val requestBody = jsonObj.toString().toRequestBody("application/json".toMediaTypeOrNull())
-
-        //What is the difference between GlobalScope(Dispatchers.Main).launch and line 52
-        CoroutineScope(Dispatchers.Main).launch {
-            //fix for "inappropriate blocking method call" for response.body()?.string().toString()
-            kotlin.runCatching {
-                // Do the POST request and get response
-                val response = service.createParcours(requestBody)
-
-                if (response.isSuccessful) {
-
-                    val jsonAsString = response.body()?.string().toString()
-                    val result = JsonParser().parse(jsonAsString).asJsonObject
-                    //Log.i("RETROFIT_NICE_jsonAsString", jsonAsString)
-                    Log.i("RETROFIT_NICE:", result.get("status").toString())
-                    Toast.makeText(applicationContext, "Parcours erstellt ", Toast.LENGTH_SHORT)
-                        .show()
-                    finish()
-                } else {
-                    val errCode = response.code().toString()
-
-                    Log.e("POST_Parcours_ERROR", errCode)
-                    Toast.makeText(
-                        applicationContext,
-                        "Etwas ist falsch gelaufen: $errCode",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
     }
 
 

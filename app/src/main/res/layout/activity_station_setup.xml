@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StationSetupActivity">
+    tools:context=".ui.StationSetupActivity">
 
     <com.google.android.material.slider.Slider
         android:id="@+id/slider"

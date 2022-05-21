@@ -1,15 +1,18 @@
-package com.example.bowbuddyapp.game
+package com.example.bowbuddyapp.ui.game
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.example.bowbuddyapp.R
+import com.example.bowbuddyapp.databinding.ActivityGameBinding
 
 class GameActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityGameBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game)
+        binding = ActivityGameBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         val singleplayerFragment = SingleplayerFragment(this, intent.getStringExtra("gameRule").toString())
         val multiplayerFragment = MultiplayerFragment()
         //TODO replace static dummy

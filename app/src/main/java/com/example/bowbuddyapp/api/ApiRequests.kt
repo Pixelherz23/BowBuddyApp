@@ -22,7 +22,7 @@ interface ApiRequests {
     suspend fun getParcours(@Path("email") email: String): Response<List<Parcours>>
 
     @POST("parcours")
-    suspend fun createParcours(@Body requetBody: RequestBody): Response<ResponseBody>
+    suspend fun createParcours(@Body requetBody: Parcours): Response<ResponseBody>
 
     @GET("station/{id}")
     suspend fun getStations(@Path("id") id: Int): Response<List<Station>>

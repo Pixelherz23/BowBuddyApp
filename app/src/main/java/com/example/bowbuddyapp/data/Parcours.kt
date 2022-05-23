@@ -12,7 +12,9 @@ data class Parcours(
     @SerializedName("priceParcours")
     val price: String,
     @SerializedName("infoParcours")
-    val info: String
+    val info: String,
+    @SerializedName("User_emailUser")
+    val email: String
 
 
 

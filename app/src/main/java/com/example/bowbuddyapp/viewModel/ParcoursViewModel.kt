@@ -28,6 +28,7 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests): ViewM
     val pbVisibility: LiveData<Int> = pbVisibilityLiveData
 
     init {
+        //TODO change this static implementation
         fetchData("test@api.com")
     }
 

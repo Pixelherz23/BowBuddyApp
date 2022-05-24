@@ -10,8 +10,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.bowbuddyapp.api.requests.ApiRequests
 import com.example.bowbuddyapp.data.Parcours
 import com.example.bowbuddyapp.data.Target
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 import java.lang.NullPointerException
@@ -59,31 +64,38 @@ class StationSetupViewModel @Inject constructor(private var api: ApiRequests): V
 
     }
 
+    //TODO stop user to go on next page if sending unsuccessful
     fun sendEachTargetToServer(stationName: String){
-        /*
-        for(tempTarget in targetList){
+        viewModelScope.launch() {
+            for (tempTarget in targets.value!!) {
 
-            val response = try{
-               //TODO build Request body
-                api.createTarget(null)
-            } catch(e: IOException){
-                Log.e("PVM", "IOException, you might not have internet connection")
-                // pbVisibilityLiveData.value = View.GONE
-                return@launch
-            } catch (e: HttpException){
-                Log.e("PVM", "HttpException, unexpected response")
-                // pbVisibilityLiveData.value = View.GONE
-                return@launch
+
+                val response = try {
+
+                    api.createTarget(buildRequestBody(tempTarget, stationName))
+                    //var body = buildRequestBody(tempTarget, stationName)
+
+                } catch (e: IOException) {
+                    Log.e("SVM", "IOException, you might not have internet connection")
+                    // pbVisibilityLiveData.value = View.GONE
+                    return@launch
+                } catch (e: HttpException) {
+                    Log.e("SVM", "HttpException, unexpected response")
+                    // pbVisibilityLiveData.value = View.GONE
+                    return@launch
+                }
+                if (response.isSuccessful && response.body() != null) {
+                    Log.i("SVM", "Response Successful")
+                } else {
+                    Log.e("SVM", "Response not Successful")
+
+                }
+
             }
-            if(response.isSuccessful && response.body() != null) {
 
-            }else{
-                Log.e("PVM", "Response not Successful")
-
-            }
         }
 
-         */
+
     }
 
     fun removeAllTargets(){
@@ -93,6 +105,22 @@ class StationSetupViewModel @Inject constructor(private var api: ApiRequests): V
     }
     fun getTargets(): LiveData<List<Target>>{
         return targets as LiveData<List<Target>>
+    }
+
+    fun buildRequestBody(target: Target, stationName: String): RequestBody {
+        val jsonString = Gson().toJson(target)
+        var jsonObj = JSONObject(jsonString)
+        //TODO is the key "nameStation" the right one?
+        jsonObj.put("nameStation", stationName)
+
+
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+
+        val requestBody = jsonObj.toString().toRequestBody(mediaType)
+        //Log.i("body", jsonObj.toString())
+        return requestBody
+
+
     }
 
 

@@ -44,7 +44,8 @@ class CreateParcoursViewModel @Inject constructor(private var api: ApiRequests):
             }
 
             if(response.isSuccessful && response.body() != null) {
-
+                //TODO Pass (parcours) id for the creation of stations
+                var id = response.body()
                 Log.i("Msg", "Sendning Parcours succuess")
             }else{
                 Log.e("Msg", "Sending failed ${response.toString()}")

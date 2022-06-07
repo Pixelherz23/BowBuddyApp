@@ -13,8 +13,10 @@ import com.example.bowbuddyapp.R
 import com.example.bowbuddyapp.databinding.ActivityStationSetupBinding
 import com.example.bowbuddyapp.ui.main.MainActivity
 import com.example.bowbuddyapp.viewModel.CreateParcoursViewModel
+import com.example.bowbuddyapp.viewModel.SinglePlayerViewModel
 import com.example.bowbuddyapp.viewModel.StationSetupViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -44,11 +46,13 @@ class StationSetupActivity : AppCompatActivity() {
 
     private val viewModel: StationSetupViewModel by viewModels()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStationSetupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+       // Log.i("testModel", testModel.stations.value.toString())
         amountOfStations = intent.getIntExtra("amountOfStations", 1)
         binding.etStatinNo.setText("Station $stationCounter von $amountOfStations")
         jsonParcours = JSONObject(intent.getStringExtra("json"))
@@ -138,8 +142,6 @@ class StationSetupActivity : AppCompatActivity() {
 
                 if (stationCounter <= amountOfStations) {
 
-                    //saveInputAndClearFields(jsonParcours)
-
                         binding.linearLayoutTargets.forEach {
 
                         if (it is EditText) {
@@ -149,16 +151,48 @@ class StationSetupActivity : AppCompatActivity() {
                                 0,
                                 it.text.toString(),
                                 "")
-
+                            Log.i("Target", tempTarget.toString())
                             viewModel.addTarget(tempTarget)
-                            //Log.i("ViewModel", viewModel.targets.value.toString())
+
 
                         }
-                            viewModel.sendEachTargetToServer("$stationCounter")
+
+
+                           //viewModel.stationName.value = stationCounter.toString()
+
 
                     }
+                    Log.i("stationCounter", stationCounter.toString())
+                    viewModel.setStationName(stationCounter.toString())
+
+                    var x =   intent.getStringExtra("createdParcoursId")
+                    Log.i("StationSetupActivity", x.toString())
+
+                    /*
+                runBlocking {
+                    var y =  viewModel.sendStationToServer(x!!)
+                    y.join()
+                    viewModel.sendEachTargetToServer()
+                }
+                */
+
+                    GlobalScope.launch(Dispatchers.IO) {
+                       var job = viewModel.sendStationToServer(x!!)
+                        job.join()
+                        viewModel.sendEachTargetToServer()
+                    }
+
+                    /*
+                    viewModel.sendStationToServer(x!!)
+                    viewModel._stationID.observe(this) { _stationID ->
+                        Log.i("SSA", "stationID  $_stationID changed, sending Target")
+                        viewModel.sendEachTargetToServer()
+                    }
+                    //viewModel.clear()
                     clearFields()
-                    viewModel.removeAllTargets()
+                    //viewModel.removeAllTargets()
+                     */
+
 
                 }
                 if(stationCounter == amountOfStations) {

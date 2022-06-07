@@ -6,11 +6,13 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleObserver
 import com.example.bowbuddyapp.data.Parcours
 import com.example.bowbuddyapp.databinding.ActivityCreateParcoursBinding
 import com.example.bowbuddyapp.viewModel.CreateParcoursViewModel
 import com.example.bowbuddyapp.viewModel.ParcoursViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 
 
@@ -49,12 +51,28 @@ class CreateParcoursActivity : AppCompatActivity() {
             Log.i("Parcours: ", parcours.toString())
 
             viewModel.parcours.value = parcours
-            viewModel.sendParcours()
+            var job = viewModel.sendParcours()
 
-            val intent = Intent(applicationContext, StationSetupActivity::class.java)
-            intent.putExtra("amountOfStations",binding.slider.value.toInt())
-            intent.putExtra("json",parcoursDataToJson().toString() )
-            startActivity(intent)
+            //This will crash the app
+
+
+            viewModel.parcoursId.observe(this){ parcoursId ->
+                val intent = Intent(applicationContext, StationSetupActivity::class.java)
+                intent.putExtra("amountOfStations",binding.slider.value.toInt())
+                intent.putExtra("json",parcoursDataToJson().toString() )
+                Log.i("parcoursId from CreateParcours: ", parcoursId.toString())
+                intent.putExtra("createdParcoursId",parcoursId.toString())
+                startActivity(intent)
+            }
+
+
+
+
+
+
+
+
+
         }
     }
     /*

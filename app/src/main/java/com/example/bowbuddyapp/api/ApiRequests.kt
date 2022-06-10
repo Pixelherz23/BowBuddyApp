@@ -5,10 +5,7 @@ import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface ApiRequests {
 
@@ -39,8 +36,8 @@ interface ApiRequests {
     @GET("statistics/{email}")
     suspend fun getStatistics(@Path("email") email: String): Response<Statistics>
 
-    @GET("game/{link}")
-    suspend fun getGame(@Path("link") link: String): Response<Game>
+    @GET("game")
+    suspend fun getGame(@Query("link") link: String): Response<Game>
 
     @POST("game")
     suspend fun createGame(@Body requetBody : Game): Response<ResponseBody>

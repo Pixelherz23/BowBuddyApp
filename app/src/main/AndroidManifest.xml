@@ -17,9 +17,6 @@
             android:name=".ui.game.GameActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.game.PreGame"
-            android:exported="false" />
-        <activity
             android:name=".ui.main.SignInActivity"
             android:exported="true">
             <intent-filter>

@@ -36,46 +36,52 @@
         >
 
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/ivGoogleImage"
-                android:layout_width="73dp"
-                android:layout_height="73dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="10dp"
+            <io.getstream.avatarview.AvatarView
+                android:id="@+id/avGoogleImage"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_margin="10sp"
+                android:layout_marginTop="5dp"
+                app:avatarViewBorderColor="@color/white"
+                app:avatarViewBorderWidth="1dp"
+                app:avatarViewShape="circle"
                 app:layout_constraintBottom_toTopOf="@+id/guideline2"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/tvGoogleName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
                 android:text="Max Mustermann"
+                android:textSize="20sp"
+                android:textStyle="bold"
                 android:textColor="@color/white"
-                app:layout_constraintBottom_toTopOf="@+id/tvGoogleEmail"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toEndOf="@+id/ivGoogleImage" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/avGoogleImage" />
 
             <TextView
                 android:id="@+id/tvGoogleEmail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
                 android:text="max.mustermann@gmail.com"
                 android:textColor="@color/white"
-                app:layout_constraintBottom_toTopOf="@+id/guideline2"
+                android:textSize="15sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/ivGoogleImage" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvGoogleName" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline2"
@@ -83,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="148dp"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="151dp"
+                app:layout_constraintGuide_begin="154dp"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.navigation.NavigationView>

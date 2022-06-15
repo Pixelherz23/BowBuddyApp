@@ -3,20 +3,26 @@ package com.example.bowbuddyapp.ui.main
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.bowbuddyapp.data.Game
 import com.example.bowbuddyapp.data.Parcours
+import com.example.bowbuddyapp.databinding.CustomAlertdialogPregameBinding
 import com.example.bowbuddyapp.databinding.CustomAlertdialogBinding
 import com.example.bowbuddyapp.databinding.ItemParcoursCardBinding
-import com.example.bowbuddyapp.ui.game.PreGame
+import com.example.bowbuddyapp.ui.game.GameActivity
+import com.example.bowbuddyapp.viewModel.ParcoursViewModel
 
 //Job of adapter: creating views for our items that have in our recycler
 //short: binds data to views(item_card.xml)
-class ParcoursAdapter() : RecyclerView.Adapter<ParcoursAdapter.ParcourViewHolder>() {
+class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.Adapter<ParcoursAdapter.ParcourViewHolder>() {
 
     //holds the views of the items that are currently displayed
     inner class ParcourViewHolder(val binding: ItemParcoursCardBinding) : RecyclerView.ViewHolder(binding.root)
@@ -51,6 +57,9 @@ class ParcoursAdapter() : RecyclerView.Adapter<ParcoursAdapter.ParcourViewHolder
         val parcour = parcours[position]
         val context = holder.itemView.context
         val dialogBinding = CustomAlertdialogBinding.inflate(LayoutInflater.from(context))
+        val preGameBinding = CustomAlertdialogPregameBinding.inflate(LayoutInflater.from(context))
+        var rule: String = ""
+        var multiplayerFlag = false
 
         dialogBinding.apply {
             etStreet.text = parcour.address
@@ -58,27 +67,68 @@ class ParcoursAdapter() : RecyclerView.Adapter<ParcoursAdapter.ParcourViewHolder
             etInfoDescription.text = parcour.info
         }
 
+        val preGameDialog = AlertDialog.Builder(context)
+            .setTitle(parcour.name)
+            .setPositiveButton("Lets shoot"){ _, _ ->
+                viewModel.game.value = Game(parcour.id, viewModel.link.value!!, rule)
+                // Datenbankenspam verhindern
+                //viewModel.sendGame()
+                val intent = Intent(context, GameActivity::class.java)
+
+                //intent.putExtra("link", viewModel.link.value)
+                intent.putExtra("link", "https://bowbuddy.com/FdjMyXcqK8")
+                intent.putExtra("multiplayer", multiplayerFlag)
+                context.startActivity(intent)
+            }
+            .setNegativeButton("Abbrechen") {_, _ ->
+            }
+            .setView(preGameBinding.root)
+            .create()
+
         val shootDialog = AlertDialog.Builder(context)
             .setTitle(parcour.name)
-            .setPositiveButton("Lets shoot") { _, _ ->
-                val intent = Intent(context, PreGame::class.java)
-                context.startActivity(intent)
+            .setPositiveButton("Weiter") { _, _ ->
+                preGameDialog.show()
             }
             .setNegativeButton("Abbrechen") {_, _ ->
             }
             .setView(dialogBinding.root)
             .create()
 
-        holder.binding.apply {
-            tvParcoursName.text = parcour.name
+        preGameBinding.apply {
+            spRule.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+                override fun onItemSelected(adapter: AdapterView<*>?, view: View?, indexOfItem: Int, idOfItem: Long) {
+                     rule = adapter?.getItemAtPosition(indexOfItem).toString()
+                    Log.i("Item", rule)
+                }
 
-            cardView.setOnClickListener{
-                shootDialog.show()
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                }
+            }
 
+            swMultiplayer.setOnCheckedChangeListener{ _, isChecked ->
+                multiplayerFlag = isChecked
+                if(isChecked){
+                    tvLink.text = viewModel.link.value
+                    preGameBinding.linearLayout.visibility = View.VISIBLE
+                }else{
+                    preGameBinding.linearLayout.visibility = View.GONE
+                }
+            }
 
+            holder.binding.apply {
+                tvParcoursName.text = parcour.name
+
+                cardView.setOnClickListener{
+
+                    shootDialog.show()
+                    viewModel.generateLink()
+
+                }
             }
         }
     }
 
     override fun getItemCount() = parcours.size
+
 }

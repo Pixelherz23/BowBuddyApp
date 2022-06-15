@@ -1,15 +1,15 @@
 package com.example.bowbuddyapp.viewModel
 
+import android.app.Application
 import android.content.ContentValues.TAG
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.bowbuddyapp.api.requests.ApiRequests
+import com.example.bowbuddyapp.data.Game
 import com.example.bowbuddyapp.data.Parcours
+import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,40 +20,76 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class ParcoursViewModel @Inject constructor(private var api: ApiRequests): ViewModel() {
-    private val parcoursLiveData = MutableLiveData<List<Parcours>>()
-    val parcours: LiveData<List<Parcours>> = parcoursLiveData
+class ParcoursViewModel @Inject constructor(private var api: ApiRequests, application: Application): AndroidViewModel(application) {
+    private val _parcours = MutableLiveData<List<Parcours>>()
+    val parcours: LiveData<List<Parcours>> = _parcours
 
-    private val pbVisibilityLiveData = MutableLiveData<Int>()
-    val pbVisibility: LiveData<Int> = pbVisibilityLiveData
+    private val _pbVisibility = MutableLiveData<Int>()
+    val pbVisibility: LiveData<Int> = _pbVisibility
+
+    private val linkLiveData = MutableLiveData<String>()
+    val link : LiveData<String> = linkLiveData
+    val game = MutableLiveData<Game>()
 
     init {
         //TODO change this static implementation
         fetchData("test@api.com")
     }
 
+    fun generateLink(){
+        val prefix = "https://bowbuddy.com/"
+        val charset = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        val link = List(10){ charset.random() }.joinToString("")
+        linkLiveData.value = prefix + link
+
+    }
+
     fun fetchData(email: String){
         viewModelScope.launch() {
-            pbVisibilityLiveData.value = View.VISIBLE
+            _pbVisibility.value = View.VISIBLE
             val response = try{
                 api.getParcours(email)
             } catch(e: IOException){
                 Log.e("PVM", "IOException, you might not have internet connection")
-                pbVisibilityLiveData.value = View.GONE
+                _pbVisibility.value = View.GONE
                 return@launch
             } catch (e: HttpException){
                 Log.e("PVM", "HttpException, unexpected response")
-                pbVisibilityLiveData.value = View.GONE
+                _pbVisibility.value = View.GONE
                 return@launch
             }
             if(response.isSuccessful && response.body() != null) {
 
-                parcoursLiveData.value = response.body()!!
+                _parcours.value = response.body()!!
 
             }else{
                 Log.e("PVM", "Response not Successful")
             }
-            pbVisibilityLiveData.value = View.GONE
+            _pbVisibility.value = View.GONE
+        }
+    }
+
+    fun sendGame(){
+        viewModelScope.launch() {
+
+            val response = try{
+                api.createGame(game.value!!)
+            } catch(e: IOException){
+                Log.e("PVM", "IOException, you might not have internet connection")
+                return@launch
+            } catch (e: HttpException){
+                Log.e("PVM", "HttpException, unexpected response")
+                return@launch
+            }
+            if(response.isSuccessful && response.body() != null) {
+                Toast.makeText(getApplication<Application>().applicationContext
+                    , "Sending success", Toast.LENGTH_SHORT).show()
+            }else{
+                Log.e("PVM", "Response not Successful")
+                Toast.makeText(getApplication<Application>().applicationContext
+                    , "Sending failed", Toast.LENGTH_SHORT).show()
+            }
+            // pbVisibilityLiveData.value = View.GONE
         }
     }
 }

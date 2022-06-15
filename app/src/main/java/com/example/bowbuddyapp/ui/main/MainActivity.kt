@@ -2,6 +2,7 @@ package com.example.bowbuddyapp.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.Toast
@@ -15,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
+import io.getstream.avatarview.coil.loadImage
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -33,16 +35,11 @@ class MainActivity : AppCompatActivity() {
         val acct = GoogleSignIn.getLastSignedInAccount(this)
 
         if(acct != null){
-            if(acct.photoUrl != null){
-                findViewById<ImageView>(R.id.ivGoogleImage).setImageURI(null)
-                findViewById<ImageView>(R.id.ivGoogleImage).setImageURI(acct.photoUrl)
-
-            }else{
-                Toast.makeText(this, "No Image", Toast.LENGTH_SHORT).show()
-            }
             binding.apply {
                 tvGoogleName.text = acct.displayName
                 tvGoogleEmail.text = acct.email
+                Log.i("GOOGLE", acct.photoUrl.toString())
+                avGoogleImage.loadImage(acct.photoUrl.toString())
             }
 
         }
@@ -57,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         //Isnt R.id unessacry cause kotlinx impport like for  nav_View
         //it makes a difference when you dont use "apply". Fragment wont load
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.view_fragment_Container,homeFragment)
+            replace(binding.viewFragmentContainer.id ,homeFragment)
             commit()
 
         }

@@ -3,17 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/item1"
-        android:title="Home">
+        android:icon="@drawable/ic_home"
+        android:title="Start">
 
     </item>
     <item
         android:id="@+id/item2"
-        android:title="Stats">
+        android:icon="@drawable/ic_stats"
+        android:title="Statistisken">
 
     </item>
     <item
         android:id="@+id/item3"
-        android:title="Friends">
+        android:icon="@drawable/ic_friends"
+        android:title="Freunde">
 
     </item>
     <item

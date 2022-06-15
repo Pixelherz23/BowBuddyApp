@@ -60,5 +60,7 @@ interface ApiRequests {
     @POST("points/target")
     suspend fun createPoints(@Body requetBody: RequestBody): Response<ResponseBody>
 
+    @DELETE("parcours/{id}")
+    suspend fun deleteParcours(@Path("id") id: String): Response<ResponseBody>
 
 }

@@ -1,23 +1,13 @@
 package com.example.bowbuddyapp.viewModel
 
-import android.app.AlertDialog
-import android.content.Intent
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bowbuddyapp.data.Parcours
 import com.example.bowbuddyapp.data.Statistics
-import com.example.bowbuddyapp.databinding.CustomAlertdialogBinding
 import com.example.bowbuddyapp.databinding.ItemHitProbabilityCardBinding
-import com.example.bowbuddyapp.databinding.ItemParcoursCardBinding
 import com.example.bowbuddyapp.databinding.ItemPlacementCardBinding
-import com.example.bowbuddyapp.ui.game.PreGame
-import com.example.bowbuddyapp.ui.main.ParcoursAdapter
-import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry

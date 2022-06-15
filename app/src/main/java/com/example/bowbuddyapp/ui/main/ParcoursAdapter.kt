@@ -19,6 +19,8 @@ import com.example.bowbuddyapp.databinding.CustomAlertdialogBinding
 import com.example.bowbuddyapp.databinding.ItemParcoursCardBinding
 import com.example.bowbuddyapp.ui.game.GameActivity
 import com.example.bowbuddyapp.viewModel.ParcoursViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 //Job of adapter: creating views for our items that have in our recycler
 //short: binds data to views(item_card.xml)
@@ -95,6 +97,24 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
             .setView(dialogBinding.root)
             .create()
 
+        val deleteDialog = AlertDialog.Builder(context)
+            .setTitle("Parcour wirklich löschen")
+            .setPositiveButton("Ja") { _, _ ->
+                GlobalScope.launch() {
+
+                    var x = viewModel.deleteParcours()
+                    x.join()
+                    viewModel.fetchData("test@api.com")
+
+
+                }
+
+
+            }
+            .setNegativeButton("Nein") {_, _ ->
+            }
+            .create()
+
         preGameBinding.apply {
             spRule.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                 override fun onItemSelected(adapter: AdapterView<*>?, view: View?, indexOfItem: Int, idOfItem: Long) {
@@ -125,6 +145,14 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
                     viewModel.generateLink()
 
                 }
+
+                cardView.setOnLongClickListener{
+                    deleteDialog.show()
+                    viewModel.parcoursIdTodelete.value = parcour.id.toString()
+
+                    return@setOnLongClickListener true
+                }
+
             }
         }
     }

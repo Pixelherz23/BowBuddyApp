@@ -12,6 +12,7 @@ import com.example.bowbuddyapp.data.Parcours
 import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Call
@@ -31,6 +32,8 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
     val link : LiveData<String> = linkLiveData
     val game = MutableLiveData<Game>()
 
+    val parcoursIdTodelete = MutableLiveData<String>()
+
     init {
         //TODO change this static implementation
         fetchData("test@api.com")
@@ -45,6 +48,7 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
     }
 
     fun fetchData(email: String){
+        Log.i("PVM","Fetch Data called")
         viewModelScope.launch() {
             _pbVisibility.value = View.VISIBLE
             val response = try{
@@ -59,7 +63,7 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
                 return@launch
             }
             if(response.isSuccessful && response.body() != null) {
-
+                Log.e("PVM", "Request success")
                 _parcours.value = response.body()!!
 
             }else{
@@ -92,4 +96,32 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
             // pbVisibilityLiveData.value = View.GONE
         }
     }
+
+    fun deleteParcours() : Job {
+
+        var x = viewModelScope.launch() {
+            val response = try{
+                //TODO change this static implementation
+               api.deleteParcours(parcoursIdTodelete.value!!)
+            } catch(e: IOException){
+                Log.e("PVM", "IOException, you might not have internet connection")
+                return@launch
+            } catch (e: HttpException){
+                Log.e("PVM", "HttpException, unexpected response")
+                return@launch
+            }
+            if(response.isSuccessful && response.body() != null) {
+                Toast.makeText(getApplication<Application>().applicationContext
+                    , "Sending success", Toast.LENGTH_SHORT).show()
+            }else{
+                Log.e("PVM", "Response not Successful")
+                Toast.makeText(getApplication<Application>().applicationContext
+                    , "Sending failed", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+
+        return x
+    }
+
 }

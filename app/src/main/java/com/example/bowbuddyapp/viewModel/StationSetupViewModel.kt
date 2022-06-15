@@ -85,7 +85,6 @@ class StationSetupViewModel @Inject constructor(private var api: ApiRequests): V
 
 
      fun sendStationToServer(parcoursId: String):Job {
-
            val x = viewModelScope.launch() {
                Log.i("SVM_station", "Coroutine executed")
 

@@ -10,6 +10,7 @@ import com.example.bowbuddyapp.api.requests.ApiRequests
 import com.example.bowbuddyapp.data.Game
 import com.example.bowbuddyapp.data.Statistics
 import com.example.bowbuddyapp.data.Target
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -23,7 +24,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class StatisticsViewModel @Inject constructor(private var api: ApiRequests): ViewModel() {
+class StatisticsViewModel @Inject constructor(private var api: ApiRequests, var acct: GoogleSignInAccount): ViewModel() {
 
     val statistics = MutableLiveData<Statistics>()
 
@@ -34,8 +35,9 @@ class StatisticsViewModel @Inject constructor(private var api: ApiRequests): Vie
 
 
     init {
+        //"test@api.com"
         //TODO change this static implementation
-        getStatistics("test@api.com")
+        getStatistics(acct.email.toString())
     }
 
 
@@ -45,11 +47,11 @@ class StatisticsViewModel @Inject constructor(private var api: ApiRequests): Vie
             val response = try{
                 api.getStatistics(email)
             } catch(e: IOException){
-                Log.e("PVM", "IOException, you might not have internet connection")
+                Log.e("SVM", "IOException, you might not have internet connection")
                 pbVisibilityLiveData.value = View.GONE
                 return@launch
             } catch (e: HttpException){
-                Log.e("PVM", "HttpException, unexpected response")
+                Log.e("SVM", "HttpException, unexpected response")
                 pbVisibilityLiveData.value = View.GONE
                 return@launch
             }
@@ -58,7 +60,7 @@ class StatisticsViewModel @Inject constructor(private var api: ApiRequests): Vie
                 statistics.value =response.body()!!
 
             }else{
-                Log.e("PVM", "Response not Successful")
+                Log.e("SVM", "Response not Successful")
             }
             pbVisibilityLiveData.value = View.GONE
         }

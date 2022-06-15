@@ -13,7 +13,7 @@ interface ApiRequests {
     suspend fun getUser(@Path("email") email: String): Response<User>
 
     @POST("user")
-    suspend fun createUser(@Body requestBody: RequestBody): Response<ResponseBody>
+    suspend fun createUser(@Body requestBody: User): Response<ResponseBody>
 
     @GET("parcours/{email}")
     suspend fun getParcours(@Path("email") email: String): Response<List<Parcours>>

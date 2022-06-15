@@ -11,9 +11,12 @@ import com.example.bowbuddyapp.data.Parcours
 import com.example.bowbuddyapp.databinding.ActivityCreateParcoursBinding
 import com.example.bowbuddyapp.viewModel.CreateParcoursViewModel
 import com.example.bowbuddyapp.viewModel.ParcoursViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
+import javax.inject.Inject
 
 
 /*
@@ -29,6 +32,9 @@ class CreateParcoursActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateParcoursBinding
 
     private val viewModel: CreateParcoursViewModel by viewModels()
+
+    @Inject
+    lateinit var mGoogleSignInAcc : GoogleSignInAccount
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +52,7 @@ class CreateParcoursActivity : AppCompatActivity() {
                 binding.editTextCity.text.toString(),
                 binding.editTextPrice.text.toString(),
                 binding.editTextInfo.text.toString(),
-                "test@api.com"
+                mGoogleSignInAcc.email.toString()
             )
             Log.i("Parcours: ", parcours.toString())
 

@@ -35,14 +35,14 @@ class CreateParcoursViewModel @Inject constructor(private var api: ApiRequests):
                 //TODO Watch out, API Request is changed
                 api.createParcours(parcours.value!!)
             } catch(e: IOException){
-                Log.e("PVM", "IOException, you might not have internet connection")
-
+                Log.e("CPVM", "IOException, you might not have internet connection")
+                Log.e("CPVM", e.toString())
                 return@launch
             } catch (e: HttpException){
-                Log.e("PVM", "HttpException, unexpected response")
+                Log.e("CPVM", "HttpException, unexpected response")
                 return@launch
             }catch (e : NullPointerException) {
-                Log.e("PVM", "NullPointerException")
+                Log.e("CPVM", "NullPointerException")
                 return@launch
             }
 

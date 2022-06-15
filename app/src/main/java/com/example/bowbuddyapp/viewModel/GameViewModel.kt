@@ -42,11 +42,11 @@ class GameViewModel @Inject constructor(private var api: ApiRequests, applicatio
             val response = try{
                 api.getGame(link)
             } catch(e: IOException){
-                Log.e("PVM", "IOException, you might not have internet connection")
+                Log.e("GVM", "IOException, you might not have internet connection")
                 _pbVisibility.value = View.GONE
                 return@launch
             } catch (e: HttpException){
-                Log.e("PVM", "HttpException, unexpected response")
+                Log.e("GVM", "HttpException, unexpected response")
                 _pbVisibility.value = View.GONE
                 return@launch
             }
@@ -55,7 +55,7 @@ class GameViewModel @Inject constructor(private var api: ApiRequests, applicatio
                 _game.value = response.body()!!
 
             }else{
-                Log.e("PVM", "Response not Successful")
+                Log.e("GVM", "Response not Successful")
             }
             _pbVisibility.value = View.GONE
         }
@@ -67,11 +67,11 @@ class GameViewModel @Inject constructor(private var api: ApiRequests, applicatio
             val response = try{
                 api.getStations(parcour)
             } catch(e: IOException){
-                Log.e("PVM", "IOException, you might not have internet connection")
+                Log.e("GVM", "IOException, you might not have internet connection")
                 _pbVisibility.value = View.GONE
                 return@launch
             } catch (e: HttpException){
-                Log.e("PVM", "HttpException, unexpected response")
+                Log.e("GVM", "HttpException, unexpected response")
                 _pbVisibility.value = View.GONE
                 return@launch
             }
@@ -84,7 +84,7 @@ class GameViewModel @Inject constructor(private var api: ApiRequests, applicatio
                 _stations.value = response.body()!!
 
             }else{
-                Log.e("PVM", "Response not Successful")
+                Log.e("GVM", "Response not Successful")
             }
             _pbVisibility.value = View.GONE
         }

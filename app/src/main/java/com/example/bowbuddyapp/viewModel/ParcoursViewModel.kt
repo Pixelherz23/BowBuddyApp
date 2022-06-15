@@ -9,6 +9,7 @@ import androidx.lifecycle.*
 import com.example.bowbuddyapp.api.requests.ApiRequests
 import com.example.bowbuddyapp.data.Game
 import com.example.bowbuddyapp.data.Parcours
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class ParcoursViewModel @Inject constructor(private var api: ApiRequests, application: Application): AndroidViewModel(application) {
+class ParcoursViewModel @Inject constructor(private var api: ApiRequests, application: Application, var acct : GoogleSignInAccount): AndroidViewModel(application) {
     private val _parcours = MutableLiveData<List<Parcours>>()
     val parcours: LiveData<List<Parcours>> = _parcours
 
@@ -35,8 +36,8 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
     val parcoursIdTodelete = MutableLiveData<String>()
 
     init {
-        //TODO change this static implementation
-        fetchData("test@api.com")
+        //TODO change this static implementation [DONE]
+        fetchData(acct.email.toString())
     }
 
     fun generateLink(){
@@ -101,7 +102,6 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
 
         var x = viewModelScope.launch() {
             val response = try{
-                //TODO change this static implementation
                api.deleteParcours(parcoursIdTodelete.value!!)
             } catch(e: IOException){
                 Log.e("PVM", "IOException, you might not have internet connection")

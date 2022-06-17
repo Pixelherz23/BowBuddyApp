@@ -49,7 +49,8 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
     }
 
     fun fetchData(email: String){
-        Log.i("PVM","Fetch Data called")
+        Log.i("PVM Before Fetch _Parcours",_parcours.value.toString() )
+        Log.i("PVM Before Fetch Parcours",parcours.value.toString() )
         viewModelScope.launch() {
             _pbVisibility.value = View.VISIBLE
             val response = try{
@@ -67,10 +68,20 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
                 Log.e("PVM", "Request success")
                 _parcours.value = response.body()!!
 
-            }else{
-                Log.e("PVM", "Response not Successful")
+
+            }else if(response.code() == 404){
+                //_parcours.value?.clear()
+                _parcours.value = listOf()
+
+
+            } else{
+                Log.e("PVM", "Response not Successful ${response.code()}")
+
             }
             _pbVisibility.value = View.GONE
+
+            Log.i("PVM After Fetch _Parcours",_parcours.value.toString() )
+            Log.i("PVM After Fetch Parcours",parcours.value.toString() )
         }
     }
 

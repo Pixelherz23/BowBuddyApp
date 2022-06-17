@@ -59,8 +59,8 @@ class MainActivity : AppCompatActivity() {
 
 
         val homeFragment = HomeFragment()
-
         val testFragment = StatisticsFragment()
+        val helpFragment = HelpFragment()
 
         //Init the container with the homeFragment
         //Isnt R.id unessacry cause kotlinx impport like for  nav_View
@@ -85,6 +85,13 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.item2 ->supportFragmentManager.beginTransaction().apply {
                     replace(R.id.view_fragment_Container,testFragment)
+
+                    commit()
+
+                    binding.drawerLayout.close()
+                }
+                R.id.item4 ->supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.view_fragment_Container,helpFragment)
 
                     commit()
 

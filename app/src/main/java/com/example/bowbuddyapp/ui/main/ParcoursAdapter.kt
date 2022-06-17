@@ -120,7 +120,6 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
 
                     viewModel.fetchData(myEntryPoint.getGoogleAcc().email.toString())
 
-
                 }
 
 
@@ -170,6 +169,7 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
             }
         }
     }
+
 
     override fun getItemCount() = parcours.size
 

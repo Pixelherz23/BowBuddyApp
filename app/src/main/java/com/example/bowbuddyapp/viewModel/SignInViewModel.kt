@@ -43,9 +43,11 @@ class SignInViewModel @Inject constructor(private var api: ApiRequests, applicat
             }
 
             if (response.isSuccessful && response.body() != null) {
+                Log.i("SIVM", "Response Successful, User in Database found")
                 isInDatabase.value = true
 
             } else if (response.code() == 404) {
+                Log.i("SIVM", "User not in Database")
                 isInDatabase.value = false
 
             } else {
@@ -60,8 +62,6 @@ class SignInViewModel @Inject constructor(private var api: ApiRequests, applicat
     fun createUser() {
         if (isInDatabase.value == false) {
             viewModelScope.launch() {
-                Log.i("SIVM", "Coroutine executed")
-
                 val response = try {
                     api.createUser(user.value!!)
 
@@ -75,10 +75,8 @@ class SignInViewModel @Inject constructor(private var api: ApiRequests, applicat
                     return@launch
                 }
                 if (response.isSuccessful && response.body() != null) {
-
-
-                } else if (response.code() == 404) {
-                    isInDatabase.value = false
+                    Log.i("SIVM", "Response Successful, User in Database created" )
+                    isInDatabase.value = true
 
                 } else {
                     Log.e("SIVM", "Response not Successful")

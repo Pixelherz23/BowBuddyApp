@@ -23,6 +23,8 @@ class HomeFragment() : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var parcoursAdapter : ParcoursAdapter
+
     //view are not accessable yet cause the arent inflated yet
     //in onView Created they are accessable though
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,8 +43,7 @@ class HomeFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val parcoursAdapter = ParcoursAdapter(viewModel)
-
+      parcoursAdapter = ParcoursAdapter(viewModel)
         binding.apply {
 
             viewRecycler.apply {
@@ -60,11 +61,13 @@ class HomeFragment() : Fragment() {
 
             viewModel.parcours.observe(viewLifecycleOwner){ parcours ->
                 parcoursAdapter.parcours = parcours
+                parcoursAdapter.notifyDataSetChanged()
                 Log.i("PARCOUR", parcours.toString())
             }
             viewModel.pbVisibility.observe(viewLifecycleOwner){ visibility ->
                 binding.progressBar.visibility = visibility
             }
+
 
         }
     }
@@ -72,6 +75,7 @@ class HomeFragment() : Fragment() {
     override fun onResume() {
         Log.i("onResume", "activated")
         super.onResume()
+        parcoursAdapter.notifyDataSetChanged()
 
     }
 

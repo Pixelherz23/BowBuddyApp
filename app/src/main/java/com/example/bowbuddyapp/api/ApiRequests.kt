@@ -19,19 +19,19 @@ interface ApiRequests {
     suspend fun getParcours(@Path("email") email: String): Response<List<Parcours>>
 
     @POST("parcours")
-    suspend fun createParcours(@Body requetBody: Parcours): Response<ResponseBody>
+    suspend fun createParcours(@Body requestBody: Parcours): Response<ResponseBody>
 
     @GET("station/{id}")
     suspend fun getStations(@Path("id") id: Int): Response<List<Station>>
 
     @POST("station")
-    suspend fun createStation(@Body requetBody: RequestBody): Response<ResponseBody>
+    suspend fun createStation(@Body requestBody: RequestBody): Response<ResponseBody>
 
     @GET("target/{id}")
-    suspend fun getTarget(@Path("id") id: Int): Response<List<Target>>
+    suspend fun getTargets(@Path("id") id: Int): Response<List<Target>>
 
     @POST("target")
-    suspend fun createTarget(@Body requetBody: RequestBody): Response<ResponseBody>
+    suspend fun createTarget(@Body requestBody: RequestBody): Response<ResponseBody>
 
     @GET("statistics/{email}")
     suspend fun getStatistics(@Path("email") email: String): Response<Statistics>
@@ -39,26 +39,26 @@ interface ApiRequests {
     @GET("game")
     suspend fun getGame(@Query("link") link: String): Response<Game>
 
-    @POST("game")
-    suspend fun createGame(@Body requetBody : Game): Response<ResponseBody>
+    @POST("game/{email}")
+    suspend fun createGame(@Path("email") email: String, @Body requestBody : Game): Response<ResponseBody>
 
-    @GET("points/target/{email}/{link}/{target}")
+    @GET("points/target/{email}/{target}")
     suspend fun getPointsTarget(@Path("email" ) email: String,
-                                @Path("link" ) link: String,
-                                @Path("target" ) target: String): Response<Int>
+                                @Path("target" ) target: Int,
+                                @Query("link" ) link: String ): Response<Points>
 
-    @GET("points/station/{email}/{link}/{station}")
+    @GET("points/station/{email}/{station}")
     suspend fun getPointsStation(@Path("email" ) email: String,
-                                @Path("link" ) link: String,
-                                @Path("station" ) station: String): Response<Int>
+                                 @Path("station" ) station: Int,
+                                 @Query("link" ) link: String ): Response<PointsStation>
 
-    @GET("points/parcours/{email}/{link}/{parcours}")
+    @GET("points/parcours/{email}/{parcours}")
     suspend fun getPointsParcours(@Path("email" ) email: String,
-                                 @Path("link" ) link: String,
-                                 @Path("parcours" ) parcours: String): Response<Int>
+                                  @Path("parcours", ) parcours: Int,
+                                  @Query("link" ) link: String ): Response<PointsParcours>
 
-    @POST("points/target")
-    suspend fun createPoints(@Body requetBody: RequestBody): Response<ResponseBody>
+    @PUT("points/target")
+    suspend fun createPoints(@Body requestBody: Points): Response<ResponseBody>
 
 
 }

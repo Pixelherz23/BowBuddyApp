@@ -72,11 +72,11 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
             .setPositiveButton("Lets shoot"){ _, _ ->
                 viewModel.game.value = Game(parcour.id, viewModel.link.value!!, rule)
                 // Datenbankenspam verhindern
-                //viewModel.sendGame()
+                //viewModel.sendGame("test@api.com")
                 val intent = Intent(context, GameActivity::class.java)
 
                 //intent.putExtra("link", viewModel.link.value)
-                intent.putExtra("link", "https://bowbuddy.com/FdjMyXcqK8")
+                intent.putExtra("link", "https://bowbuddy.com/onsz4qLZ76")
                 intent.putExtra("multiplayer", multiplayerFlag)
                 context.startActivity(intent)
             }
@@ -114,6 +114,14 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
                 }else{
                     preGameBinding.linearLayout.visibility = View.GONE
                 }
+            }
+
+            imShare.setOnClickListener {
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.setType("text/plain")
+                intent.putExtra(Intent.EXTRA_SUBJECT, "URL zum Teilen")
+                intent.putExtra(Intent.EXTRA_TEXT, tvLink.text)
+                context.startActivity(Intent.createChooser(intent, "Share URL"))
             }
 
             holder.binding.apply {

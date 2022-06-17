@@ -23,12 +23,6 @@ class HomeFragment() : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    //view are not accessable yet cause the arent inflated yet
-    //in onView Created they are accessable though
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -69,11 +63,6 @@ class HomeFragment() : Fragment() {
         }
     }
 
-    override fun onResume() {
-        Log.i("onResume", "activated")
-        super.onResume()
-
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

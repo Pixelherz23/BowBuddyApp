@@ -26,15 +26,8 @@ class GameViewModel @Inject constructor(private var api: ApiRequests, applicatio
     private val _stations = MutableLiveData<List<Station>>()
     val stations: LiveData<List<Station>> = _stations
 
-    private val _targets = ArrayList<List<Target>>()
-    val targets: ArrayList<List<Target>> = _targets
-
     private val _pbVisibility = MutableLiveData<Int>()
     val pbVisibility: LiveData<Int> = _pbVisibility
-
-    init {
-
-    }
 
     fun fetchGame(link: String){
         viewModelScope.launch {
@@ -42,11 +35,11 @@ class GameViewModel @Inject constructor(private var api: ApiRequests, applicatio
             val response = try{
                 api.getGame(link)
             } catch(e: IOException){
-                Log.e("PVM", "IOException, you might not have internet connection")
+                Log.e("GVM", "IOException, you might not have internet connection")
                 _pbVisibility.value = View.GONE
                 return@launch
             } catch (e: HttpException){
-                Log.e("PVM", "HttpException, unexpected response")
+                Log.e("GVM", "HttpException, unexpected response")
                 _pbVisibility.value = View.GONE
                 return@launch
             }
@@ -55,7 +48,7 @@ class GameViewModel @Inject constructor(private var api: ApiRequests, applicatio
                 _game.value = response.body()!!
 
             }else{
-                Log.e("PVM", "Response not Successful")
+                Log.e("GVM", "Response not Successful: ${response.code()}")
             }
             _pbVisibility.value = View.GONE
         }
@@ -67,45 +60,24 @@ class GameViewModel @Inject constructor(private var api: ApiRequests, applicatio
             val response = try{
                 api.getStations(parcour)
             } catch(e: IOException){
-                Log.e("PVM", "IOException, you might not have internet connection")
+                Log.e("GVM", "IOException, you might not have internet connection")
                 _pbVisibility.value = View.GONE
                 return@launch
             } catch (e: HttpException){
-                Log.e("PVM", "HttpException, unexpected response")
+                Log.e("GVM", "HttpException, unexpected response")
                 _pbVisibility.value = View.GONE
                 return@launch
             }
 
             if(response.isSuccessful && response.body() != null) {
-                val targets = ArrayList<List<Target>>()
-                response.body()!!.forEach {
-                    fetchTargets(it.id).await()
-                }
                 _stations.value = response.body()!!
 
             }else{
-                Log.e("PVM", "Response not Successful")
+                Log.e("GVM", "Response not Successful: ${response.code()}")
             }
             _pbVisibility.value = View.GONE
         }
     }
 
-    private suspend fun fetchTargets(station: Int) = viewModelScope.async {
-        val response = try{
-            api.getTarget(station)
-        } catch(e: IOException){
-            Log.e("PVM", "IOException, you might not have internet connection")
-            _pbVisibility.value = View.GONE
-            return@async
-        } catch (e: HttpException){
-            Log.e("PVM", "HttpException, unexpected response")
-            _pbVisibility.value = View.GONE
-            return@async
-        }
-        if(response.isSuccessful && response.body() != null) {
-            _targets.add(response.body()!!)
-        }else{
-            Log.e("PVM", "Response not Successful")
-        }
-    }
+
 }

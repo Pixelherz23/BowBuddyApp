@@ -10,8 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.bowbuddyapp.databinding.ItemTargetCardBinding
 import com.example.bowbuddyapp.data.Target
 import com.example.bowbuddyapp.databinding.CustomAlertdialogPointsBinding
+import com.example.bowbuddyapp.viewModel.GameViewModel
 
-class GameAdapter () : RecyclerView.Adapter<GameAdapter.TargetViewHolder>() {
+class GameAdapter (val viewModel: GameViewModel) : RecyclerView.Adapter<GameAdapter.TargetViewHolder>() {
     //numpicker 0,1,2,3,4
     val dsb = arrayOf("11","10","8","5","0")
 
@@ -61,12 +62,13 @@ class GameAdapter () : RecyclerView.Adapter<GameAdapter.TargetViewHolder>() {
 
         val pointsDialog = AlertDialog.Builder(context)
             .setTitle(target.name)
+            .setPositiveButton("Speichern") { _, _ ->
 
-
-
-        pointsDialog.setPositiveButton("Speichern") { _, _ ->
-                dialogBinding
             }
+            .setNegativeButton("Abbrechen") { _, _ ->
+            }
+            .setView(dialogBinding.root)
+            .create()
 
         holder.binding.apply {
             tvTargetName.text = target.name

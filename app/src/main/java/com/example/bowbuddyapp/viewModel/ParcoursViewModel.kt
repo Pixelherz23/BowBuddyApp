@@ -32,6 +32,7 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
     val game = MutableLiveData<Game>()
 
     init {
+        //TODO change this static implementation
         fetchData("test@api.com")
     }
 

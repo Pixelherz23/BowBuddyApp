@@ -6,12 +6,17 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleObserver
 import com.example.bowbuddyapp.data.Parcours
 import com.example.bowbuddyapp.databinding.ActivityCreateParcoursBinding
 import com.example.bowbuddyapp.viewModel.CreateParcoursViewModel
 import com.example.bowbuddyapp.viewModel.ParcoursViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
+import javax.inject.Inject
 
 
 /*
@@ -27,6 +32,9 @@ class CreateParcoursActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateParcoursBinding
 
     private val viewModel: CreateParcoursViewModel by viewModels()
+
+    @Inject
+    lateinit var mGoogleSignInAcc : GoogleSignInAccount
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,17 +52,33 @@ class CreateParcoursActivity : AppCompatActivity() {
                 binding.editTextCity.text.toString(),
                 binding.editTextPrice.text.toString(),
                 binding.editTextInfo.text.toString(),
-                "test@api.com"
+                mGoogleSignInAcc.email.toString()
             )
             Log.i("Parcours: ", parcours.toString())
 
             viewModel.parcours.value = parcours
-            viewModel.sendParcours()
+            var job = viewModel.sendParcours()
 
-            val intent = Intent(applicationContext, StationSetupActivity::class.java)
-            intent.putExtra("amountOfStations",binding.slider.value.toInt())
-            intent.putExtra("json",parcoursDataToJson().toString() )
-            startActivity(intent)
+            //This will crash the app
+
+
+            viewModel.parcoursId.observe(this){ parcoursId ->
+                val intent = Intent(applicationContext, StationSetupActivity::class.java)
+                intent.putExtra("amountOfStations",binding.slider.value.toInt())
+                intent.putExtra("json",parcoursDataToJson().toString() )
+                Log.i("parcoursId from CreateParcours: ", parcoursId.toString())
+                intent.putExtra("createdParcoursId",parcoursId.toString())
+                startActivity(intent)
+            }
+
+
+
+
+
+
+
+
+
         }
     }
     /*

@@ -1,41 +1,46 @@
 package com.example.bowbuddyapp.ui.game
 
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.bowbuddyapp.R
+import androidx.fragment.app.Fragment
+import com.example.bowbuddyapp.data.Station
 import com.example.bowbuddyapp.databinding.ActivityGameBinding
+import com.example.bowbuddyapp.viewModel.GameViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class GameActivity : AppCompatActivity() {
+    private val viewModel: GameViewModel by viewModels()
     private lateinit var binding: ActivityGameBinding
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val singleplayerFragment = SingleplayerFragment(this, intent.getStringExtra("gameRule").toString())
-        val multiplayerFragment = MultiplayerFragment()
-        //TODO replace static dummy
-        //singleplayerFragment.targets.add(Target("test","szt1", 0))
-        //singleplayerFragment.targets.add(Target("test2","szt1", 0))
+        val link = intent.getStringExtra("link")!!
 
-
-        if(intent.getBooleanExtra("isMultiplayer", false) == false){
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.view_game_fragment_Container,singleplayerFragment)
-                commit()
-
+        val stationAdapter = StationAdapter(this, link)
+        viewModel.apply {
+            fetchGame(link)
+            pbVisibility.observe(this@GameActivity){ visibility ->
+                binding.pbStations.visibility = visibility
             }
-        }else{
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.view_game_fragment_Container,multiplayerFragment)
-                commit()
 
+            game.observe(this@GameActivity){game ->
+                Log.i("GAME", game.link)
+                viewModel.fetchStations(game.idParcours)
+            }
+
+            stations.observe(this@GameActivity){ stations ->
+                Log.i("OBSERVE", stations.toString())
+                stationAdapter.stations = stations
             }
         }
 
-
-
+        binding.viewPager.adapter = stationAdapter
     }
-
 }

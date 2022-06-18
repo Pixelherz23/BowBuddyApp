@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bowbuddyapp.api.requests.ApiRequests
 import com.example.bowbuddyapp.data.Parcours
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -19,37 +20,51 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateParcoursViewModel @Inject constructor(private var api: ApiRequests): ViewModel() {
 
+    var parcoursId = MutableLiveData<String>()
      val parcours= MutableLiveData<Parcours>()
     //val parcours: LiveData<Parcours>
 
     //lateinit var parcours : Parcours
 
 
-    fun sendParcours(){
-        viewModelScope.launch() {
+    fun sendParcours(): Job {
+
+       var x = viewModelScope.launch() {
 
             val response = try{
                 //TODO Watch out, API Request is changed
                 api.createParcours(parcours.value!!)
             } catch(e: IOException){
-                Log.e("PVM", "IOException, you might not have internet connection")
-
+                Log.e("CPVM", "IOException, you might not have internet connection")
+                Log.e("CPVM", e.toString())
                 return@launch
             } catch (e: HttpException){
-                Log.e("PVM", "HttpException, unexpected response")
+                Log.e("CPVM", "HttpException, unexpected response")
                 return@launch
             }catch (e : NullPointerException) {
-                Log.e("PVM", "NullPointerException")
+                Log.e("CPVM", "NullPointerException")
                 return@launch
             }
 
             if(response.isSuccessful && response.body() != null) {
+                //TODO Pass (parcours) id for the creation of stations
 
+                    var id = response.body()?.string()
+                parcoursId.value = id.toString()
+
+                //Log.i("ParcoursID", id)
+                Log.i(" parcoursId.value",   parcoursId.value.toString())
                 Log.i("Msg", "Sendning Parcours succuess")
+
+
+
             }else{
                 Log.e("Msg", "Sending failed ${response.toString()}")
             }
+
         }
+        return x
     }
+
 
     }

@@ -5,12 +5,16 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.core.view.size
 import com.example.bowbuddyapp.R
 import com.example.bowbuddyapp.databinding.ActivityStationSetupBinding
 import com.example.bowbuddyapp.ui.main.MainActivity
+import com.example.bowbuddyapp.viewModel.StationSetupViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -19,6 +23,7 @@ import org.json.JSONObject
 // fix bug at addOnChangeListener. Inserts acting weird [DONE]
 // send targets stations and Parcoursinfos to API
 
+@AndroidEntryPoint
 class StationSetupActivity : AppCompatActivity() {
     //val BASE_URL = "https://dummy.restapiexample.com"
     val BASE_URL = "https://59baf216-74eb-4959-9c0c-f38ed4849c5b.mock.pstmn.io"
@@ -37,11 +42,15 @@ class StationSetupActivity : AppCompatActivity() {
         R.id.et_target5
     )
 
+    private val viewModel: StationSetupViewModel by viewModels()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStationSetupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+       // Log.i("testModel", testModel.stations.value.toString())
         amountOfStations = intent.getIntExtra("amountOfStations", 1)
         binding.etStatinNo.setText("Station $stationCounter von $amountOfStations")
         jsonParcours = JSONObject(intent.getStringExtra("json"))
@@ -102,6 +111,7 @@ class StationSetupActivity : AppCompatActivity() {
                 if (it is EditText) {
                     if (it.text.isEmpty()) {
                         flag = true
+
                     }
                 }
 
@@ -128,15 +138,64 @@ class StationSetupActivity : AppCompatActivity() {
                 }
                  */
 
-                if (stationCounter < amountOfStations) {
+                if (stationCounter <= amountOfStations) {
 
-                    saveInputAndClearFields(jsonParcours)
+                        binding.linearLayoutTargets.forEach {
+
+                        if (it is EditText) {
+
+
+                            var tempTarget = com.example.bowbuddyapp.data.Target(
+                                0,
+                                it.text.toString(),
+                                "")
+                            Log.i("Target", tempTarget.toString())
+                            viewModel.addTarget(tempTarget)
+
+
+                        }
+
+
+                           //viewModel.stationName.value = stationCounter.toString()
+
+
+                    }
+                    Log.i("stationCounter", stationCounter.toString())
+                    viewModel.setStationName(stationCounter.toString())
+
+                    var x =   intent.getStringExtra("createdParcoursId")
+                    Log.i("StationSetupActivity", x.toString())
+
+                    /*
+                runBlocking {
+                    var y =  viewModel.sendStationToServer(x!!)
+                    y.join()
+                    viewModel.sendEachTargetToServer()
+                }
+                */
+
+                    GlobalScope.launch(Dispatchers.IO) {
+                       var job = viewModel.sendStationToServer(x!!)
+                        job.join()
+                        viewModel.sendEachTargetToServer()
+                    }
+
+                    /*
+                    viewModel.sendStationToServer(x!!)
+                    viewModel._stationID.observe(this) { _stationID ->
+                        Log.i("SSA", "stationID  $_stationID changed, sending Target")
+                        viewModel.sendEachTargetToServer()
+                    }
+                    //viewModel.clear()
+                    clearFields()
+                    //viewModel.removeAllTargets()
+                     */
+
 
                 }
                 if(stationCounter == amountOfStations) {
-                    saveInputAndClearFields(jsonParcours)
-
-                    sendJsonToServer(jsonParcours)
+                    //saveInputAndClearFields(jsonParcours)
+                    //sendJsonToServer(jsonParcours)
                     val intent = Intent(applicationContext, MainActivity::class.java)
                     startActivity(intent)
                 }
@@ -164,6 +223,15 @@ class StationSetupActivity : AppCompatActivity() {
 
         var key = "st${stationCounter.toString()}"
         jsob.put(key, jsonArr)
+    }
+
+    fun clearFields(){
+        binding.linearLayoutTargets.forEach {
+
+            if (it is EditText) {
+                it.setText(null)
+            }
+        }
     }
 /*
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

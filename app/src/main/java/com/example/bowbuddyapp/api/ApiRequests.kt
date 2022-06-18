@@ -5,10 +5,7 @@ import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface ApiRequests {
 
@@ -16,52 +13,54 @@ interface ApiRequests {
     suspend fun getUser(@Path("email") email: String): Response<User>
 
     @POST("user")
-    suspend fun createUser(@Body requestBody: RequestBody): Response<ResponseBody>
+    suspend fun createUser(@Body requestBody: User): Response<ResponseBody>
 
     @GET("parcours/{email}")
     suspend fun getParcours(@Path("email") email: String): Response<List<Parcours>>
 
     @POST("parcours")
-    suspend fun createParcours(@Body requetBody: Parcours): Response<ResponseBody>
+    suspend fun createParcours(@Body requestBody: Parcours): Response<ResponseBody>
 
     @GET("station/{id}")
     suspend fun getStations(@Path("id") id: Int): Response<List<Station>>
 
     @POST("station")
-    suspend fun createStation(@Body requetBody: RequestBody): Response<ResponseBody>
+    suspend fun createStation(@Body requestBody: RequestBody): Response<ResponseBody>
 
     @GET("target/{id}")
-    suspend fun getTarget(@Path("id") id: Int): Response<List<Target>>
+    suspend fun getTargets(@Path("id") id: Int): Response<List<Target>>
 
     @POST("target")
-    suspend fun createTarget(@Body requetBody: RequestBody): Response<ResponseBody>
+    suspend fun createTarget(@Body requestBody: RequestBody): Response<ResponseBody>
 
     @GET("statistics/{email}")
     suspend fun getStatistics(@Path("email") email: String): Response<Statistics>
 
-    @GET("game/{link}")
-    suspend fun getGame(@Path("link") link: String): Response<Game>
+    @GET("game")
+    suspend fun getGame(@Query("link") link: String): Response<Game>
 
-    @POST("game")
-    suspend fun createGame(@Body requetBody : Game): Response<ResponseBody>
+    @POST("game/{email}")
+    suspend fun createGame(@Path("email") email: String, @Body requestBody : Game): Response<ResponseBody>
 
-    @GET("points/target/{email}/{link}/{target}")
+    @GET("points/target/{email}/{target}")
     suspend fun getPointsTarget(@Path("email" ) email: String,
-                                @Path("link" ) link: String,
-                                @Path("target" ) target: String): Response<Int>
+                                @Path("target" ) target: Int,
+                                @Query("link" ) link: String ): Response<Points>
 
-    @GET("points/station/{email}/{link}/{station}")
+    @GET("points/station/{email}/{station}")
     suspend fun getPointsStation(@Path("email" ) email: String,
-                                @Path("link" ) link: String,
-                                @Path("station" ) station: String): Response<Int>
+                                 @Path("station" ) station: Int,
+                                 @Query("link" ) link: String ): Response<PointsStation>
 
-    @GET("points/parcours/{email}/{link}/{parcours}")
+    @GET("points/parcours/{email}/{parcours}")
     suspend fun getPointsParcours(@Path("email" ) email: String,
-                                 @Path("link" ) link: String,
-                                 @Path("parcours" ) parcours: String): Response<Int>
+                                  @Path("parcours", ) parcours: Int,
+                                  @Query("link" ) link: String ): Response<PointsParcours>
 
-    @POST("points/target")
-    suspend fun createPoints(@Body requetBody: RequestBody): Response<ResponseBody>
+    @PUT("points/target")
+    suspend fun createPoints(@Body requestBody: Points): Response<ResponseBody>
 
+    @DELETE("parcours/{id}")
+    suspend fun deleteParcours(@Path("id") id: String): Response<ResponseBody>
 
 }

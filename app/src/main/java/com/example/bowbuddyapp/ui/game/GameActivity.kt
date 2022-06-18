@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.bowbuddyapp.data.Station
 import com.example.bowbuddyapp.databinding.ActivityGameBinding
 import com.example.bowbuddyapp.viewModel.GameViewModel
@@ -20,25 +21,26 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val link = intent.getStringExtra("link")!!
 
-        val stationAdapter = SIngleplayerAdapter()
-        binding.viewPager.adapter = stationAdapter
+        val stationAdapter = StationAdapter(this, link)
         viewModel.apply {
-            fetchGame(intent.getStringExtra("link")!!)
+            fetchGame(link)
             pbVisibility.observe(this@GameActivity){ visibility ->
                 binding.pbStations.visibility = visibility
             }
 
-            game.observe(this@GameActivity){
-                Log.i("GAME", it.link)
-                viewModel.fetchStations(it.idParcours)
+            game.observe(this@GameActivity){game ->
+                Log.i("GAME", game.link)
+                viewModel.fetchStations(game.idParcours)
             }
+
             stations.observe(this@GameActivity){ stations ->
                 Log.i("OBSERVE", stations.toString())
-                stationAdapter.targets = targets
                 stationAdapter.stations = stations
-
             }
         }
+
+        binding.viewPager.adapter = stationAdapter
     }
 }

@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bowbuddyapp.data.Station
 import com.example.bowbuddyapp.databinding.ItemMultiplayerBinding
-import com.example.bowbuddyapp.databinding.ItemSingleplayerBinding
 
 class MultiplayerAdapter() : RecyclerView.Adapter<MultiplayerAdapter.ViewPagerViewHolder>(){
 

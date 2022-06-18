@@ -22,14 +22,7 @@ class HomeFragment() : Fragment() {
     private val viewModel: ParcoursViewModel by viewModels()
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var parcoursAdapter : ParcoursAdapter
-
-    //view are not accessable yet cause the arent inflated yet
-    //in onView Created they are accessable though
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,

@@ -85,11 +85,11 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
         }
     }
 
-    fun sendGame(){
+    fun sendGame(email: String){
         viewModelScope.launch() {
 
             val response = try{
-                api.createGame(game.value!!)
+                api.createGame(email, game.value!!)
             } catch(e: IOException){
                 Log.e("PVM", "IOException, you might not have internet connection")
                 return@launch

@@ -19,6 +19,13 @@ import com.example.bowbuddyapp.databinding.CustomAlertdialogBinding
 import com.example.bowbuddyapp.databinding.ItemParcoursCardBinding
 import com.example.bowbuddyapp.ui.game.GameActivity
 import com.example.bowbuddyapp.viewModel.ParcoursViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 //Job of adapter: creating views for our items that have in our recycler
 //short: binds data to views(item_card.xml)
@@ -26,6 +33,12 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
 
     //holds the views of the items that are currently displayed
     inner class ParcourViewHolder(val binding: ItemParcoursCardBinding) : RecyclerView.ViewHolder(binding.root)
+
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface MyEntryPoint {
+      fun getGoogleAcc() : GoogleSignInAccount
+    }
 
     private val diffCallback = object: DiffUtil.ItemCallback<Parcours>(){
         override fun areItemsTheSame(oldItem: Parcours, newItem: Parcours): Boolean =
@@ -95,6 +108,26 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
             .setView(dialogBinding.root)
             .create()
 
+        val deleteDialog = AlertDialog.Builder(context)
+            .setTitle("Parcour wirklich löschen")
+            .setPositiveButton("Ja") { _, _ ->
+                GlobalScope.launch() {
+
+                    var x = viewModel.deleteParcours()
+                    x.join()
+
+                    val myEntryPoint = EntryPointAccessors.fromApplication(context, MyEntryPoint::class.java)
+
+                    viewModel.fetchData(myEntryPoint.getGoogleAcc().email.toString())
+
+                }
+
+
+            }
+            .setNegativeButton("Nein") {_, _ ->
+            }
+            .create()
+
         preGameBinding.apply {
             spRule.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                 override fun onItemSelected(adapter: AdapterView<*>?, view: View?, indexOfItem: Int, idOfItem: Long) {
@@ -133,9 +166,18 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
                     viewModel.generateLink()
 
                 }
+
+                cardView.setOnLongClickListener{
+                    deleteDialog.show()
+                    viewModel.parcoursIdTodelete.value = parcour.id.toString()
+
+                    return@setOnLongClickListener true
+                }
+
             }
         }
     }
+
 
     override fun getItemCount() = parcours.size
 

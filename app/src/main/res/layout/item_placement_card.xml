@@ -4,14 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="230dp">
+    android:layout_height="400dp">
     <!-- A CardView that contains a TextView -->
     <androidx.cardview.widget.CardView
 
 
         android:id="@+id/card_view_target"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_gravity="center"
         card_view:cardCornerRadius="4dp"
         card_view:cardElevation="25dp"
@@ -30,17 +30,18 @@
                 android:id="@+id/activity_main_piechart"
 
                 android:layout_width="match_parent"
-                android:layout_height="171dp"
+                android:layout_height="206dp"
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintHorizontal_bias="0.5"
+                card_view:layout_constraintHorizontal_bias="0.0"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/totalAmount"
                 card_view:layout_constraintVertical_bias="1.0" />
 
             <TextView
 
                 android:id="@+id/totalAmount"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"

@@ -22,6 +22,7 @@ class HomeFragment() : Fragment() {
     private val viewModel: ParcoursViewModel by viewModels()
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private lateinit var parcoursAdapter : ParcoursAdapter
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -35,8 +36,7 @@ class HomeFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val parcoursAdapter = ParcoursAdapter(viewModel)
-
+      parcoursAdapter = ParcoursAdapter(viewModel)
         binding.apply {
 
             viewRecycler.apply {
@@ -54,15 +54,23 @@ class HomeFragment() : Fragment() {
 
             viewModel.parcours.observe(viewLifecycleOwner){ parcours ->
                 parcoursAdapter.parcours = parcours
+                parcoursAdapter.notifyDataSetChanged()
                 Log.i("PARCOUR", parcours.toString())
             }
             viewModel.pbVisibility.observe(viewLifecycleOwner){ visibility ->
                 binding.progressBar.visibility = visibility
             }
 
+
         }
     }
 
+    override fun onResume() {
+        Log.i("onResume", "activated")
+        super.onResume()
+        parcoursAdapter.notifyDataSetChanged()
+
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

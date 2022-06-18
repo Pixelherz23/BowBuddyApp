@@ -12,8 +12,6 @@ import androidx.core.view.size
 import com.example.bowbuddyapp.R
 import com.example.bowbuddyapp.databinding.ActivityStationSetupBinding
 import com.example.bowbuddyapp.ui.main.MainActivity
-import com.example.bowbuddyapp.viewModel.CreateParcoursViewModel
-import com.example.bowbuddyapp.viewModel.SinglePlayerViewModel
 import com.example.bowbuddyapp.viewModel.StationSetupViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*

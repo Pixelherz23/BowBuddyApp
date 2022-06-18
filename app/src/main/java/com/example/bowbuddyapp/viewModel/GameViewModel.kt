@@ -49,6 +49,7 @@ class GameViewModel @Inject constructor(private var api: ApiRequests, applicatio
 
             }else{
                 Log.e("GVM", "Response not Successful: ${response.code()}")
+
             }
             _pbVisibility.value = View.GONE
         }

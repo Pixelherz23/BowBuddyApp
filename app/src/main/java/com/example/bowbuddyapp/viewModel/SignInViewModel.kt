@@ -19,13 +19,19 @@ import retrofit2.Retrofit
 import java.io.IOException
 import javax.inject.Inject
 
+/**
+ * ViewModel for the Sign In Activity
+ * @author Kai-U. Stieler
+ */
 @HiltViewModel
 class SignInViewModel @Inject constructor(private var api: ApiRequests, application: Application): AndroidViewModel(application) {
 
     val isInDatabase = MutableLiveData<Boolean>()
     val user = MutableLiveData<User>()
 
-
+    /**
+     * checks if the user exists in DB. Depending on the result, [isInDatabase] will be true or false
+     */
     fun getUser() {
         viewModelScope.launch() {
 
@@ -58,7 +64,9 @@ class SignInViewModel @Inject constructor(private var api: ApiRequests, applicat
         }
     }
 
-
+    /**
+     * sending user to database. Depeding if [isInDatabase] is true
+     */
     fun createUser() {
         if (isInDatabase.value == false) {
             viewModelScope.launch() {

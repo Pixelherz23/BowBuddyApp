@@ -23,6 +23,13 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
+
+/**
+ * ViewModel for the StatisticFragment. The class stores the [statistics] as LiveData.
+ * This gives us certain advantages. For more infos [see](https://developer.android.com/topic/libraries/architecture/livedata?authuser=1)
+ * StatisticsViewModel is also responsible for handeling statistics related api requests
+ * @author Kai-U. Stieler, Lukas Beckmann (co. author)
+ */
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(private var api: ApiRequests, var acct: GoogleSignInAccount): ViewModel() {
 
@@ -31,16 +38,16 @@ class StatisticsViewModel @Inject constructor(private var api: ApiRequests, var 
     private val pbVisibilityLiveData = MutableLiveData<Int>()
     val pbVisibility: LiveData<Int> = pbVisibilityLiveData
 
-
-
-
     init {
         //"test@api.com"
         //TODO change this static implementation
         getStatistics(acct.email.toString())
     }
 
-
+    /**
+     * API requests for retrieving user specific statistical data
+     * @param email email of the user
+     */
     fun getStatistics(email: String){
         viewModelScope.launch() {
             pbVisibilityLiveData.value = View.VISIBLE

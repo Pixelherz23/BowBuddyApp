@@ -22,6 +22,7 @@ import com.example.bowbuddyapp.viewModel.ParcoursViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
+import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.GlobalScope
@@ -29,6 +30,12 @@ import kotlinx.coroutines.launch
 
 //Job of adapter: creating views for our items that have in our recycler
 //short: binds data to views(item_card.xml)
+/**
+ * Adapter for binding each list element of ([parcours]) to an item Card
+ * The adapter necessary for the recycler
+ *
+ * @author Lukas Beckmann, Kai-U. Stieler (co-author)
+ */
 class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.Adapter<ParcoursAdapter.ParcourViewHolder>() {
 
     //holds the views of the items that are currently displayed
@@ -56,6 +63,7 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
     //called when the recycler needs a new view holder (for wexample when scrolling)
     //viewGroup: collection of views. (LinearLayout for example)
     //parent = the recylerView
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ParcourViewHolder {
         //"inflates" the item_card.xml file, so we can access it with kotlin
         // val view = LayoutInflater.from(parent.context).inflate(R.layout.item_card, parent,false)
@@ -66,6 +74,7 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
 
     //binding the data to our views/items
     //adding functionality
+
     override fun onBindViewHolder(holder: ParcourViewHolder, position: Int) {
         val parcour = parcours[position]
         val context = holder.itemView.context

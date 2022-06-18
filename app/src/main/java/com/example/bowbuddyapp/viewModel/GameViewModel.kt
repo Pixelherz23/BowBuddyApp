@@ -18,6 +18,8 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
+
+
 @HiltViewModel
 class GameViewModel @Inject constructor(private var api: ApiRequests, application: Application): AndroidViewModel(application) {
     private val _game = MutableLiveData<Game>()

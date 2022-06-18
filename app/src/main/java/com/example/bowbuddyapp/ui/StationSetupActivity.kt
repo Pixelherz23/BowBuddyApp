@@ -23,11 +23,18 @@ import org.json.JSONObject
 // fix bug at addOnChangeListener. Inserts acting weird [DONE]
 // send targets stations and Parcoursinfos to API
 
+
+/**
+ * class for inflating the page to create stations which can have up to 5 target
+ *
+ *@author Kai-U. Stieler
+ */
 @AndroidEntryPoint
 class StationSetupActivity : AppCompatActivity() {
     //val BASE_URL = "https://dummy.restapiexample.com"
     val BASE_URL = "https://59baf216-74eb-4959-9c0c-f38ed4849c5b.mock.pstmn.io"
     private lateinit var binding: ActivityStationSetupBinding
+    private val viewModel: StationSetupViewModel by viewModels()
 
     var amountOfStations = 0
     var stationCounter = 1
@@ -42,22 +49,20 @@ class StationSetupActivity : AppCompatActivity() {
         R.id.et_target5
     )
 
-    private val viewModel: StationSetupViewModel by viewModels()
-
-
+    /**
+     * Inflating the layout and adding functionality to the design elements
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStationSetupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-       // Log.i("testModel", testModel.stations.value.toString())
         amountOfStations = intent.getIntExtra("amountOfStations", 1)
         binding.etStatinNo.setText("Station $stationCounter von $amountOfStations")
         jsonParcours = JSONObject(intent.getStringExtra("json"))
 
             var a = EditText(applicationContext)
             a.hint = "Zielbezeichnung"
-            //a.id = idList[0]
             binding.linearLayoutTargets.addView(a)
 
         if(amountOfStations == stationCounter){
@@ -66,11 +71,12 @@ class StationSetupActivity : AppCompatActivity() {
         }
 
 
-
-        //If you only want the slider start and end value and don't care about the previous values
+        /**
+         * adding functionality to Slider
+         * TextViews will be created dynamically depending on the position of the slider
+         */
         binding.slider.addOnChangeListener { slider, value, fromUser ->
-            //val values = slider.value.toString()
-            Log.i("Slider Val", value.toString())
+            //Log.i("Slider Val", value.toString())
             var sliderVal = value.toInt()
             var from = slider.valueFrom.toInt()
             var to = slider.valueTo.toInt()
@@ -82,10 +88,8 @@ class StationSetupActivity : AppCompatActivity() {
                 for (tempVal in 1..additionalViews) {
                     var temp = EditText(applicationContext)
                     temp.hint = "Zielbezeichnung"
-                    //temp.id = idList[0]
                     binding.linearLayoutTargets.addView(temp)
                 }
-                //linearLayout_Targets.addView(EditText(applicationContext))
 
                 tempSliderCounter = sliderVal
 
@@ -103,6 +107,9 @@ class StationSetupActivity : AppCompatActivity() {
 
         }
 
+        /**
+         * checks if all fields are filled. If so, it will send the station plus its targets to the server
+         */
         binding.btnNextStation.setOnClickListener {
             var flag = false
 
@@ -122,21 +129,6 @@ class StationSetupActivity : AppCompatActivity() {
                     .show()
 
             } else {
-                /*
-                if (stationCounter < amountOfStations) {
-
-                    saveInputAndClearFields(jsonParcours)
-
-                    stationCounter++
-                    //Log.i("counter", stationCounter.toString())
-                    et_statinNo.setText("Station $stationCounter von $amountOfStations")
-
-                }
-                if(stationCounter == amountOfStations){
-                   et_statinNo.set
-
-                }
-                 */
 
                 if (stationCounter <= amountOfStations) {
 
@@ -152,27 +144,13 @@ class StationSetupActivity : AppCompatActivity() {
                             Log.i("Target", tempTarget.toString())
                             viewModel.addTarget(tempTarget)
 
-
                         }
-
-
-                           //viewModel.stationName.value = stationCounter.toString()
-
-
                     }
                     Log.i("stationCounter", stationCounter.toString())
                     viewModel.setStationName(stationCounter.toString())
 
                     var x =   intent.getStringExtra("createdParcoursId")
                     Log.i("StationSetupActivity", x.toString())
-
-                    /*
-                runBlocking {
-                    var y =  viewModel.sendStationToServer(x!!)
-                    y.join()
-                    viewModel.sendEachTargetToServer()
-                }
-                */
 
                     GlobalScope.launch(Dispatchers.IO) {
                        var job = viewModel.sendStationToServer(x!!)
@@ -233,24 +211,4 @@ class StationSetupActivity : AppCompatActivity() {
             }
         }
     }
-/*
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.create_parcours_bar_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.menu_item_save -> sendJsonToServer(jsonParcours)
-        }
-        return true
-    }
-    */
-
-    //dummy code for sending data to Server
-    fun sendJsonToServer(jsonObj : JSONObject) {
-
-    }
-
-
 }

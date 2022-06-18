@@ -25,25 +25,23 @@ import javax.inject.Inject
 
 
 //TODO more logic form StationSetup to ViewMOdel (e.g Landscape mode deletes the input of user)
+
+/**
+ * ViewModel for holding data and sending it, when Stations and Targets are created
+ * @author Kai-U. Stieler
+ */
 @HiltViewModel
 class StationSetupViewModel @Inject constructor(private var api: ApiRequests): ViewModel() {
 
     private val _target = MutableLiveData<MutableList<Target>>()
     val target: LiveData<MutableList<Target>> = _target
 
-
-
-    //private val _stationName = MutableLiveData<String>()
-    //val stationName : MutableLiveData<String> = _stationName
-
     private val _stationName = MutableLiveData<String>()
 
      val _stationID = MutableLiveData<String>()
-    //val stationID : MutableLiveData<String> = _stationID
 
     init {
         _target.value = mutableListOf<Target>()
-        //_stationID.value = ""
         _stationName.value = ""
 
     }
@@ -54,10 +52,6 @@ class StationSetupViewModel @Inject constructor(private var api: ApiRequests): V
 
     }
 
-
-    fun setStationID(id : String){
-        _stationID.value = id
-    }
     fun setStationName(name : String){
         _stationName.value = name
         Log.i("StationName", _stationName.value.toString() )
@@ -68,22 +62,11 @@ class StationSetupViewModel @Inject constructor(private var api: ApiRequests): V
         if(target != null){
             _target.value!!.add(target)
         }
-
-        //targetList.add(target)
-        //targets.value = targetList
-
-        /*
-        Log.i("TArget", target.toString())
-        //targetLiveData.value?.add(target)
-        targetLiveData.value?.add(target)
-        Log.i("ModelView", targets.value?.toString()!!)
-
-         */
-
-
     }
 
-
+    /**
+     * sending name of the station and the fitting parcoursID to server
+     */
      fun sendStationToServer(parcoursId: String):Job {
            val x = viewModelScope.launch() {
                Log.i("SVM_station", "Coroutine executed")
@@ -122,6 +105,9 @@ class StationSetupViewModel @Inject constructor(private var api: ApiRequests): V
 
 
     //TODO stop user to go on next page if sending unsuccessful
+    /**
+     * sending every Target to server
+     */
      fun sendEachTargetToServer(){
         for (tempTarget in _target.value!!) {
                  viewModelScope.launch() {
@@ -130,9 +116,6 @@ class StationSetupViewModel @Inject constructor(private var api: ApiRequests): V
                     val response = try {
                         Log.i("SVM_Target", "Sending target $tempTarget to  ${_stationID.value}")
                         api.createTarget(buildRequestBodyTarget(tempTarget, _stationID.value!!))
-
-                        //var body = buildRequestBody(tempTarget, stationName)
-
                     } catch (e: IOException) {
                         Log.e("SVM_Target", "IOException, you might not have internet connection")
                         // pbVisibilityLiveData.value = View.GONE
@@ -155,6 +138,13 @@ class StationSetupViewModel @Inject constructor(private var api: ApiRequests): V
             }
     }
 
+    /**
+     * Method for building a request body for sending a target
+     *
+     * @param target target which meant to be send
+     * @param stationID corresponding stationId
+     * @return the request body
+     */
     fun buildRequestBodyTarget(target: Target, stationID: String): RequestBody {
         val jsonString = Gson().toJson(target)
         var jsonObj = JSONObject(jsonString)
@@ -167,6 +157,13 @@ class StationSetupViewModel @Inject constructor(private var api: ApiRequests): V
         Log.i("body", jsonObj.toString())
         return requestBody
     }
+    /**
+     * Method for building a request body for sending a target
+     *
+     * @param station station which meant to be send
+     * @param parcoursId corresponding parcoursId
+     * @return the request body
+     */
     fun buildRequestBodyStation(station: String, parcoursId: String): RequestBody {
 
         var jsonObj = JSONObject()

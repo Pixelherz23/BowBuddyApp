@@ -20,20 +20,25 @@ import com.google.android.gms.common.api.ApiException
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+/**
+ *Class for inflating SignIn Screen and adding logic to it
+ *
+ *@author Lukas Beckmann, Kai-U. Stieler (co-author)
+ */
 @AndroidEntryPoint
 class SignInActivity: AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
-
     private val viewModel: SignInViewModel by viewModels()
-
 
     @Inject
     lateinit var mGoogleSignInClient : GoogleSignInClient
 
 
-
-    //private var mGoogleSignInClient: GoogleSignInClient? = null
-
+    /**
+     * Used when user wants to sign in (used by [signIn]). After signing in, the user will be redirected to the MainActivity.
+     * It also calls the logic to check whether the user has already registered.
+     *
+     */
     private var launcher: ActivityResultLauncher<Intent?> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val data = result.data
@@ -61,18 +66,13 @@ class SignInActivity: AppCompatActivity() {
             }
         }
     }
-
+    /**
+     * apply logic to button
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        //val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
-
-        // Build a GoogleSignInClient with the options specified by gso.
-        //mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
         binding.apply {
             signInButton.apply {
@@ -87,7 +87,10 @@ class SignInActivity: AppCompatActivity() {
 
     }
 
-    //onStart ob du angemeldet bist
+    /**
+     * Checks if the user logged in in the past. If so, this account will be resused and the MainActivity starts
+     *
+     */
     override fun onStart() {
         super.onStart()
 
@@ -102,7 +105,9 @@ class SignInActivity: AppCompatActivity() {
         }
     }
 
-    //launch the login screen
+    /**
+     * Launches the logic for loggin in. Called by a sign in button
+     */
     private fun signIn(){
         val intent = mGoogleSignInClient!!.signInIntent
         launcher.launch(intent)

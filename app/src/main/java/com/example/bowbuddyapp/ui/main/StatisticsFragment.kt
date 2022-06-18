@@ -17,6 +17,11 @@ import com.example.bowbuddyapp.viewModel.StatisticsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 //Fragment(R.layout.fragment_home) does the same as on Create View
+/**
+ * class for inflating the Statistic Fragment
+ *
+ *@author Kai-U. Stieler
+ */
 @AndroidEntryPoint
 class StatisticsFragment : Fragment() {
     private val viewModel :StatisticsViewModel by viewModels()
@@ -42,15 +47,18 @@ class StatisticsFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     *binding the data provided by the viewmodel and addaing an obeserver to the data
+     *
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val adapterST = StatisticsAdapter()
 
-
         viewModel.statistics.observe(viewLifecycleOwner){ statistics ->
+            Log.i("SF", "observe called")
             adapterST.statistics = statistics
-
             binding.apply {
                 viewRecyclerStatistic.apply {
                     adapter = adapterST

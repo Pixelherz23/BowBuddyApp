@@ -43,17 +43,11 @@ class MainActivity : AppCompatActivity() {
         val acct = GoogleSignIn.getLastSignedInAccount(this)
          */
 
-
-
-
-        if(acct != null){
-            binding.apply {
-                tvGoogleName.text = acct.displayName
-                tvGoogleEmail.text = acct.email
-                Log.i("GOOGLE", acct.photoUrl.toString())
-                avGoogleImage.loadImage(acct.photoUrl.toString())
-            }
-
+        binding.apply {
+            tvGoogleName.text = acct.displayName
+            tvGoogleEmail.text = acct.email
+            Log.i("GOOGLE", acct.photoUrl.toString())
+            avGoogleImage.loadImage(acct.photoUrl)
         }
 
 

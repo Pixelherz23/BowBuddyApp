@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.bowbuddyapp.data.Station
 
-class StationAdapter(activity: AppCompatActivity, val link: String): FragmentStateAdapter(activity) {
+class StationAdapter(activity: AppCompatActivity): FragmentStateAdapter(activity) {
 
     private val diffCallback = object: DiffUtil.ItemCallback<Station>(){
         override fun areItemsTheSame(oldItem: Station, newItem: Station): Boolean =
@@ -22,7 +22,10 @@ class StationAdapter(activity: AppCompatActivity, val link: String): FragmentSta
         get() = differ.currentList
         set(value) {differ.submitList(value)}
 
-    override fun createFragment(position: Int) = StationFragment.newInstance(stations[position].id, stations[position].name, link)
+    lateinit var link: String
+    lateinit var rule: String
+
+    override fun createFragment(position: Int) = StationFragment.newInstance(stations[position].id, stations[position].name, link, rule)
 
     override fun getItemCount() = stations.size
 

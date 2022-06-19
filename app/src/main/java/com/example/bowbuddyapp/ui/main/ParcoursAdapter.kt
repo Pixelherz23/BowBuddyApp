@@ -73,7 +73,7 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
         val preGameBinding = CustomAlertdialogPregameBinding.inflate(LayoutInflater.from(context))
         var rule: String = ""
         var multiplayerFlag = false
-
+        val myEntryPoint = EntryPointAccessors.fromApplication(context, MyEntryPoint::class.java)
         dialogBinding.apply {
             etStreet.text = parcour.address
             etPrice.text = parcour.price
@@ -84,12 +84,13 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
             .setTitle(parcour.name)
             .setPositiveButton("Lets shoot"){ _, _ ->
                 viewModel.game.value = Game(parcour.id, viewModel.link.value!!, rule)
+                Log.i("PA", "id: ${parcour.id} \n Link: ${viewModel.link.value!!} \n Rule: $rule \n Email: ${myEntryPoint.getGoogleAcc().email.toString()}")
                 // Datenbankenspam verhindern
-                //viewModel.sendGame("test@api.com")
+                viewModel.sendGame(myEntryPoint.getGoogleAcc().email.toString())
                 val intent = Intent(context, GameActivity::class.java)
 
-                //intent.putExtra("link", viewModel.link.value)
-                intent.putExtra("link", "https://bowbuddy.com/onsz4qLZ76")
+                intent.putExtra("link", viewModel.link.value)
+                //intent.putExtra("link", "https://bowbuddy.com/onsz4qLZ76")
                 intent.putExtra("multiplayer", multiplayerFlag)
                 context.startActivity(intent)
             }
@@ -113,16 +114,10 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
             .setPositiveButton("Ja") { _, _ ->
                 GlobalScope.launch() {
 
-                    var x = viewModel.deleteParcours()
+                    val x = viewModel.deleteParcours()
                     x.join()
-
-                    val myEntryPoint = EntryPointAccessors.fromApplication(context, MyEntryPoint::class.java)
-
                     viewModel.fetchData(myEntryPoint.getGoogleAcc().email.toString())
-
                 }
-
-
             }
             .setNegativeButton("Nein") {_, _ ->
             }
@@ -131,7 +126,7 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
         preGameBinding.apply {
             spRule.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                 override fun onItemSelected(adapter: AdapterView<*>?, view: View?, indexOfItem: Int, idOfItem: Long) {
-                     rule = adapter?.getItemAtPosition(indexOfItem).toString()
+                    rule = adapter?.getItemAtPosition(indexOfItem).toString()
                     Log.i("Item", rule)
                 }
 
@@ -161,9 +156,11 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
                 tvParcoursName.text = parcour.name
 
                 cardView.setOnClickListener{
-
-                    shootDialog.show()
+                    Log.i("LINK", viewModel.link.value.toString())
                     viewModel.generateLink()
+                    shootDialog.show()
+                    Log.i("LINK", viewModel.link.value.toString())
+
 
                 }
 

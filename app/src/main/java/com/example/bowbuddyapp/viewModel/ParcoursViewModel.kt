@@ -19,6 +19,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,16 +37,18 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
     val parcoursIdTodelete = MutableLiveData<String>()
 
     init {
-        //TODO change this static implementation [DONE]
         fetchData(acct.email.toString())
+        generateLink()
     }
 
     fun generateLink(){
-        val prefix = "https://bowbuddy.com/"
-        val charset = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-        val link = List(10){ charset.random() }.joinToString("")
+        val prefix = "https://bow-buddy.com/"
+        var randomStr: String = UUID.randomUUID().toString()
+        while (randomStr.length < 10) {
+            randomStr += UUID.randomUUID().toString()
+        }
+        val link = randomStr.substring(0, 10)
         linkLiveData.value = prefix + link
-
     }
 
     fun fetchData(email: String){
@@ -70,7 +73,6 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
 
 
             }else if(response.code() == 404){
-                //_parcours.value?.clear()
                 _parcours.value = listOf()
 
 
@@ -101,7 +103,7 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
                 Toast.makeText(getApplication<Application>().applicationContext
                     , "Sending success", Toast.LENGTH_SHORT).show()
             }else{
-                Log.e("PVM", "Response not Successful")
+                Log.e("PVM", "Response not Successful: ${response.code()}")
                 Toast.makeText(getApplication<Application>().applicationContext
                     , "Sending failed", Toast.LENGTH_SHORT).show()
             }

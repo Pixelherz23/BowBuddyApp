@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <io.getstream.avatarview.AvatarView
+        android:id="@+id/avatarView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_margin="10sp"
+        app:avatarViewBorderColor="@color/white"
+        app:avatarViewBorderWidth="1dp"
+        app:avatarViewShape="circle" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Jon Doe"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/tvPoints"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10sp"
+        android:layout_marginEnd="5sp"
+        android:gravity="center"
+        android:text="28P"
+        android:textSize="25sp" />
+
+</LinearLayout>

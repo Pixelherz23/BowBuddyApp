@@ -23,7 +23,7 @@ class GameActivity : AppCompatActivity() {
         setContentView(binding.root)
         val link = intent.getStringExtra("link")!!
 
-        val stationAdapter = StationAdapter(this, link)
+        val stationAdapter = StationAdapter(this)
         viewModel.apply {
             fetchGame(link)
             pbVisibility.observe(this@GameActivity){ visibility ->
@@ -32,6 +32,8 @@ class GameActivity : AppCompatActivity() {
 
             game.observe(this@GameActivity){game ->
                 Log.i("GAME", game.link)
+                stationAdapter.link = game.link
+                stationAdapter.rule = game.gameRule
                 viewModel.fetchStations(game.idParcours)
             }
 

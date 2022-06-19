@@ -44,7 +44,7 @@ class SignInActivity: AppCompatActivity() {
                 //Do sth. with User Information
                 //val account: GoogleSignInAccount? = task.getResult(ApiException::class.java)
                 //TODO test if this still works when you use an account that not in this recommendation chart (the chart when clicking on sign in)
-                var user = User(task.result.email.toString(), task.result.email.toString(),0,0)
+                var user = User(task.result.email.toString(), task.result.displayName.toString(), task.result.photoUrl.toString(),"", 0)
                 viewModel.user.value = user
                 viewModel.getUser()
 
@@ -79,12 +79,8 @@ class SignInActivity: AppCompatActivity() {
                 setSize(SignInButton.SIZE_STANDARD)
                 setOnClickListener(){
                     signIn()
-
                 }
-
         } }
-
-
     }
 
     //onStart ob du angemeldet bist

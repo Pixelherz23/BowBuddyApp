@@ -26,7 +26,11 @@ TestCase:
 What happens if internet connection gets lost?
  */
 
-
+/**
+ * class for inflating the first page to create a new Parcours
+ *
+ *@author Kai-U. Stieler
+ */
 @AndroidEntryPoint
 class CreateParcoursActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateParcoursBinding
@@ -36,6 +40,10 @@ class CreateParcoursActivity : AppCompatActivity() {
     @Inject
     lateinit var mGoogleSignInAcc : GoogleSignInAccount
 
+    /**
+     * creating/inflate the "CreateParcours" page and adding functionality
+     * after typing in all basic parcours infos, the user will be redirected to the next page
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateParcoursBinding.inflate(layoutInflater)
@@ -57,10 +65,7 @@ class CreateParcoursActivity : AppCompatActivity() {
             Log.i("Parcours: ", parcours.toString())
 
             viewModel.parcours.value = parcours
-            var job = viewModel.sendParcours()
-
-            //This will crash the app
-
+            viewModel.sendParcours()
 
             viewModel.parcoursId.observe(this){ parcoursId ->
                 val intent = Intent(applicationContext, StationSetupActivity::class.java)
@@ -70,34 +75,8 @@ class CreateParcoursActivity : AppCompatActivity() {
                 intent.putExtra("createdParcoursId",parcoursId.toString())
                 startActivity(intent)
             }
-
-
-
-
-
-
-
-
-
         }
     }
-    /*
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.create_parcours_bar_menu, menu)
-        return true
-    }
-    */
-
-
-
-    /*
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.menu_item_save -> sendParcoursToServer()
-        }
-        return true
-    }
-*/
 
 fun parcoursDataToJson(): JSONObject {
     val jsonParcours = JSONObject()

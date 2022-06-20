@@ -3,10 +3,16 @@ import com.example.bowbuddyapp.data.*
 import com.example.bowbuddyapp.data.Target
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
+/**
+ *Defining the available requests that the Server provides
+ *
+ *@author Lukas Beckmann, Kai-U. Stieler (co-author)
+ *
+ *
+ */
 interface ApiRequests {
 
     @GET("user/{email}")

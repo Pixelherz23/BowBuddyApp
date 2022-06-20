@@ -17,20 +17,22 @@ import java.io.IOException
 import java.lang.NullPointerException
 import javax.inject.Inject
 
+/**
+ * ViewModel sending the created parcours to the server
+ * @author Kai-U. Stieler
+ */
 @HiltViewModel
 class CreateParcoursViewModel @Inject constructor(private var api: ApiRequests): ViewModel() {
 
     var parcoursId = MutableLiveData<String>()
      val parcours= MutableLiveData<Parcours>()
-    //val parcours: LiveData<Parcours>
 
-    //lateinit var parcours : Parcours
-
-
-    fun sendParcours(): Job {
-
-       var x = viewModelScope.launch() {
-
+    /**
+     * Sending the parcours (without stations  and targets. For that go to [StationSetupViewModel]) to server
+     *
+     */
+    fun sendParcours() {
+        viewModelScope.launch() {
             val response = try{
                 //TODO Watch out, API Request is changed
                 api.createParcours(parcours.value!!)
@@ -52,18 +54,14 @@ class CreateParcoursViewModel @Inject constructor(private var api: ApiRequests):
                     var id = response.body()?.string()
                 parcoursId.value = id.toString()
 
-                //Log.i("ParcoursID", id)
                 Log.i(" parcoursId.value",   parcoursId.value.toString())
                 Log.i("Msg", "Sendning Parcours succuess")
-
-
 
             }else{
                 Log.e("Msg", "Sending failed ${response.toString()}")
             }
 
         }
-        return x
     }
 
 

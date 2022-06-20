@@ -22,6 +22,11 @@ import javax.inject.Inject
 
 //Fragment(R.layout.fragment_home) does the same as on Create View
 
+/**
+ *Class for inflating the Fragment that displays all the created parcours.
+ *
+ *@author Kai-U. Stieler, Lukas Beckmann (co-author)
+ */
 @AndroidEntryPoint
 class HomeFragment() : Fragment() {
 
@@ -42,6 +47,10 @@ class HomeFragment() : Fragment() {
         return binding.root
     }
 
+    /**
+     *Binding the the adapter to the recyler view so elements will be displayed
+     * Adding functionaliy to the button for creating the parcours
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val dialogBinding = CustomAlertdialogJoingameBinding.inflate(LayoutInflater.from(context))
@@ -80,20 +89,20 @@ class HomeFragment() : Fragment() {
             }
             btnCreateNewParcours.setOnClickListener {
                 Log.i("btn", "Button for creating new parcours is clicked")
-                //initParcours.add(ParcoursCard("New Parcours"))
-                //adapter.notifyItemInserted(initParcours.size-1) //?? why
                 val intent = Intent(context, CreateParcoursActivity::class.java)
                 startActivity(intent)
 
             }
+
             btnJoinGame.setOnClickListener{
                 joinGameDialog.show()
             }
 
+
             viewModel.parcours.observe(viewLifecycleOwner){ parcours ->
                 parcoursAdapter.parcours = parcours
                 parcoursAdapter.notifyDataSetChanged()
-                Log.i("PARCOUR", parcours.toString())
+                //Log.i("PARCOUR", parcours.toString())
             }
             viewModel.pbVisibility.observe(viewLifecycleOwner){ visibility ->
                 binding.progressBar.visibility = visibility
@@ -102,9 +111,10 @@ class HomeFragment() : Fragment() {
 
         }
     }
-
+    /**
+     *This is necessary in order to remove a parcours from the ui when the user deletes the parcours
+     */
     override fun onResume() {
-        Log.i("onResume", "activated")
         super.onResume()
         parcoursAdapter.notifyDataSetChanged()
 

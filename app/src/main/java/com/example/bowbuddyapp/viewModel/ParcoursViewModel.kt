@@ -22,6 +22,12 @@ import java.io.IOException
 import java.util.*
 import javax.inject.Inject
 
+/**
+ * ViewModel for the HomeFragment. The class stores the parcours as LiveData.
+ * This gives us the ability to observe the data which is helpful in the HomeFragment. More info about MutableLiveData [see](https://developer.android.com/topic/libraries/architecture/livedata?authuser=1)
+ * ParcoursViewModel is also responsible for handeling parcours related api requests
+ * @author Kai-U. Stieler, Lukas Beckmann (co. author)
+ */
 @HiltViewModel
 class ParcoursViewModel @Inject constructor(private var api: ApiRequests, application: Application, var acct : GoogleSignInAccount): AndroidViewModel(application) {
     private val _parcours = MutableLiveData<List<Parcours>>()
@@ -54,6 +60,10 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
         linkLiveData.value = prefix + link
     }
 
+    /**
+     * requests all Parcours related to given email
+     * @param email the useremail
+     */
     fun fetchData(email: String){
         Log.i("PVM Before Fetch _Parcours",_parcours.value.toString() )
         Log.i("PVM Before Fetch Parcours",parcours.value.toString() )
@@ -90,6 +100,7 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
         }
     }
 
+    //TODO kann das weg?
     fun sendGame(email: String){
         viewModelScope.launch() {
 
@@ -114,6 +125,7 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
         }
     }
 
+
     fun fetchGame(link: String){
         viewModelScope.launch {
             val response = try{
@@ -134,6 +146,11 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
             }
         }
     }
+
+
+    /**
+     * request to delete a specific parcours. the parcours will be deleted that has the same ID as found in parcoursIdTodelete
+     */
 
     fun deleteParcours() : Job {
 

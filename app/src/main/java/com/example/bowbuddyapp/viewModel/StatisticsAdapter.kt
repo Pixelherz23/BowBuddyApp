@@ -13,6 +13,13 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 
+
+/**
+ * Adapter for loading the data of [statistics] in item card
+ * The adapter necessary for the recyclerview
+ *
+ * @author Kai-U. Stieler, Lukas Beckmann (co-author)
+ */
 class StatisticsAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var counter = 0
     lateinit var statistics: Statistics
@@ -28,9 +35,14 @@ class StatisticsAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
 
-    //called when the recycler needs a new view holder (for wexample when scrolling)
+    //
     //viewGroup: collection of views. (LinearLayout for example)
     //parent = the recylerView
+    /**
+     * called when the recycler needs a new view holder (for example when scrolling)
+     * Because of the implementaion of [getItemCount] it is called two times.
+     * @return for the first call a ViewHolder for the Probability,
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         //"inflates" the item_card.xml file, so we can access it with kotlin
         // val view = LayoutInflater.from(parent.context).inflate(R.layout.item_card, parent,false)
@@ -55,60 +67,13 @@ class StatisticsAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             )
 
         }
-
-
-
-
-        //val binding = ItemHitProbabilityCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        // return StatisticsViewHolderProbability(binding)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return super.getItemViewType(position)
-    }
-    //binding the data to our views/items
-    //adding functionality
-
-    /*
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
-        if (holder is StatisticsViewHolderProbability) {
-            holder.binding.tvPointsPercentage.text = "${elem.hitProbability}%"
-
-        } else if (holder is StatisticsViewHolderPlacement){
-           var totalAmount = elem.placementFirst + elem.placementSecond + elem.placementThird
-            holder.binding.totalAmount.text = "$totalAmount Platzierungen"
 
 
-
-
-            val list = mutableListOf<PieEntry>()
-            list.add(PieEntry(percentage(elem.placementFirst, totalAmount),"1. Platz"))
-            list.add(PieEntry(percentage(elem.placementSecond, totalAmount),"2. Platz"))
-            list.add(PieEntry(percentage(elem.placementThird, totalAmount),"3. Platz"))
-
-            var dataSet = PieDataSet(list,"")
-            dataSet.setColors(getColors())
-
-            var data = PieData(dataSet)
-            data.apply {
-                setDrawValues(true)
-                setValueFormatter(PercentFormatter(holder.binding.activityMainPiechart))
-                setValueTextSize(12f)
-                setValueTextColor(Color.BLACK)
-            }
-
-            holder.binding.activityMainPiechart.apply{
-                description.isEnabled = false
-                setDrawEntryLabels(false)
-                setUsePercentValues(true)
-                setData(data)
-                invalidate()
-            }
-    }
-*/
-
-
+    /**
+     * binding the data to to the ProbabilityCard and to the PiechartCard
+     */
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         if (holder is StatisticsViewHolderProbability) {
@@ -117,8 +82,6 @@ class StatisticsAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         } else if (holder is StatisticsViewHolderPlacement){
             var totalAmount = statistics.placementFirst + statistics.placementSecond + statistics.placementThird
             holder.binding.totalAmount.text = "$totalAmount Platzierungen"
-
-
 
 
             val list = mutableListOf<PieEntry>()
@@ -130,6 +93,7 @@ class StatisticsAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             dataSet.setColors(getColors())
 
             var data = PieData(dataSet)
+
             data.apply {
                 setDrawValues(true)
                 setValueFormatter(PercentFormatter(holder.binding.activityMainPiechart))
@@ -150,6 +114,10 @@ class StatisticsAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
 }
+
+    /**
+     * Color settings for piechart
+     */
     fun getColors(): MutableList<Int> {
         val colors = mutableListOf<Int>()
         colors.add(Color.rgb(255,223,0))
@@ -160,12 +128,17 @@ class StatisticsAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
 
+    /**
+     * calculating percentage
+     */
     fun percentage( count: Int, total: Int ):Float{
-
         return (count.toFloat() / total.toFloat())
     }
 
-override fun getItemCount(): Int {
+    /**
+     * In this case, we returning how many itemcards we want.
+     */
+    override fun getItemCount(): Int {
         return 2
     }
 }

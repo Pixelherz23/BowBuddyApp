@@ -19,6 +19,7 @@ import java.io.IOException
 import java.text.FieldPosition
 import javax.inject.Inject
 
+//TODO Documentation needed
 @HiltViewModel
 class StationViewModel @Inject constructor(private var api: ApiRequests, application: Application): AndroidViewModel(application) {
 

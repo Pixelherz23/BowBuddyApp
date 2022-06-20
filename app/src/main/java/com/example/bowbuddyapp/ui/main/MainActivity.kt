@@ -4,27 +4,28 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.bowbuddyapp.R
 import com.example.bowbuddyapp.databinding.ActivityMainBinding
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
 import io.getstream.avatarview.coil.loadImage
 import javax.inject.Inject
 
+/**
+ *Entrypoint of the app. Displays the HomeFragment first and inflates the common layout of the app
+ *
+ *@author Kai-U. Stieler, Lukas Beckmann (co-author)
+ */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
     lateinit var toggle: ActionBarDrawerToggle
 
     @Inject
@@ -32,28 +33,31 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var acct : GoogleSignInAccount
-
+    /**
+     *inflating basic layout and adding functionality to the navigationdrawer
+     *
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        /*
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestProfile().build()
-        val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-        val acct = GoogleSignIn.getLastSignedInAccount(this)
-         */
 
         binding.apply {
             tvGoogleName.text = acct.displayName
             tvGoogleEmail.text = acct.email
             Log.i("GOOGLE", acct.photoUrl.toString())
             avGoogleImage.loadImage(acct.photoUrl)
+
+
+       
+
+                Log.i("account data", acct.displayName.toString())
+            }
+
+
         }
-
-
-
         val homeFragment = HomeFragment()
-        val testFragment = StatisticsFragment()
+        val statisticsFragment = StatisticsFragment()
         val helpFragment = HelpFragment()
 
         //Init the container with the homeFragment
@@ -64,10 +68,12 @@ class MainActivity : AppCompatActivity() {
             commit()
 
         }
+
         toggle = ActionBarDrawerToggle(this, binding.drawerLayout, R.string.open, R.string.close)
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         binding.navView.setNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.item1 ->supportFragmentManager.beginTransaction().apply {
@@ -78,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                     binding.drawerLayout.close()
                 }
                 R.id.item2 ->supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.view_fragment_Container,testFragment)
+                    replace(R.id.view_fragment_Container,statisticsFragment)
 
                     commit()
 
@@ -95,7 +101,6 @@ class MainActivity : AppCompatActivity() {
 
 
             }
-            //why true though
             true
         }
     }
@@ -104,7 +109,6 @@ class MainActivity : AppCompatActivity() {
         if(toggle.onOptionsItemSelected(item)){
             return true
         }
-
         return super.onOptionsItemSelected(item)
     }
 

@@ -151,7 +151,6 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
     /**
      * request to delete a specific parcours. the parcours will be deleted that has the same ID as found in parcoursIdTodelete
      */
-
     fun deleteParcours() : Job {
 
         var x = viewModelScope.launch() {

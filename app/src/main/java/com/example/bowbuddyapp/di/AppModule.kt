@@ -17,7 +17,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 /**
- *Object for dependency injection
+ *Object for dependency injection.
+ *This is convent, because everytime we need the Retrofit instancefor example, we dont need to create it everytime agaon
  *
  *@author Lukas Beckmann, Kai-U. Stieler (co-author)
  *

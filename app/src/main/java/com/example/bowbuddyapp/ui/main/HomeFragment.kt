@@ -48,8 +48,8 @@ class HomeFragment() : Fragment() {
     }
 
     /**
-     *Binding the the adapter to the recyler view so elements will be displayed
-     * Adding functionaliy to the button for creating the parcours
+     *Binding the the adapter to the recycler view so elements will be displayed
+     * Adding functionality to the button for creating the parcours
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

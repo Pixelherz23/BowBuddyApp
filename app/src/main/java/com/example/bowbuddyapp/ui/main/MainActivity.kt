@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-        }
+
         val homeFragment = HomeFragment()
         val statisticsFragment = StatisticsFragment()
         val helpFragment = HelpFragment()

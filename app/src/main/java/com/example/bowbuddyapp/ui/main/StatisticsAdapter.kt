@@ -1,4 +1,4 @@
-package com.example.bowbuddyapp.viewModel
+package com.example.bowbuddyapp.ui.main
 
 import android.graphics.Color
 import android.util.Log
@@ -16,7 +16,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 
 /**
  * Adapter for loading the data of [statistics] in item card
- * The adapter necessary for the recyclerview
+ * The adapter is necessary for the recyclerview
  *
  * @author Kai-U. Stieler, Lukas Beckmann (co-author)
  */
@@ -35,17 +35,7 @@ class StatisticsAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
 
-    //
-    //viewGroup: collection of views. (LinearLayout for example)
-    //parent = the recylerView
-    /**
-     * called when the recycler needs a new view holder (for example when scrolling)
-     * Because of the implementaion of [getItemCount] it is called two times.
-     * @return for the first call a ViewHolder for the Probability,
-     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        //"inflates" the item_card.xml file, so we can access it with kotlin
-        // val view = LayoutInflater.from(parent.context).inflate(R.layout.item_card, parent,false)
         Log.i("counter: ", counter.toString())
         if (counter == 0) {
             counter++

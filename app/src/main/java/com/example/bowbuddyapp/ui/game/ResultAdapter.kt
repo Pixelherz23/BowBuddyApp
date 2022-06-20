@@ -13,6 +13,14 @@ import io.getstream.avatarview.coil.loadImage
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
+/**
+ * Adapter for binding each list element of ([players]) to an item card in [ResultFragment]
+ * The adapter is necessary for the recyclerview
+ * @author Lukas Beckmann
+ *
+ * @property viewModel is responsible for the data
+ * @property rule the rule with the game is played
+ */
 class ResultAdapter(val viewModel: ResultViewModel, val rule: String): RecyclerView.Adapter<ResultAdapter.ResultViewHolder>() {
 
     inner class ResultViewHolder(val binding: ItemResultBinding): RecyclerView.ViewHolder(binding.root)
@@ -34,11 +42,16 @@ class ResultAdapter(val viewModel: ResultViewModel, val rule: String): RecyclerV
     lateinit var players: List<User>
     lateinit var hits: Map<String, Int>
 
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResultViewHolder {
         val binding = ItemResultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ResultViewHolder(binding)
     }
 
+    /**
+     * binds the data for each [points] to the item card
+     */
     override fun onBindViewHolder(holder: ResultViewHolder, position: Int) {
         val points = points[position]
         var player = User("", "", "", "", 0)

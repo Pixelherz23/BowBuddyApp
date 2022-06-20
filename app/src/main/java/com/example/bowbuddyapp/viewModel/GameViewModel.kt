@@ -10,16 +10,23 @@ import androidx.lifecycle.viewModelScope
 import com.example.bowbuddyapp.api.requests.ApiRequests
 import com.example.bowbuddyapp.data.Game
 import com.example.bowbuddyapp.data.Station
-import com.example.bowbuddyapp.data.Target
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import com.example.bowbuddyapp.ui.game.GameActivity
+import com.example.bowbuddyapp.ui.main.HomeFragment
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
 
-
+/**
+ * ViewModel for the [GameActivity].
+ * This class is responsible for getting the game and stations and stores them as LiveData.
+ * This gives us the ability to observe the data. More info about MutableLiveData [see](https://developer.android.com/topic/libraries/architecture/livedata?authuser=1)
+ *
+ * @author Lukas Beckmann
+ * @property api provides the methods to make request to the server
+ */
 @HiltViewModel
 class GameViewModel @Inject constructor(private var api: ApiRequests, application: Application): AndroidViewModel(application) {
     private val _game = MutableLiveData<Game>()
@@ -31,6 +38,11 @@ class GameViewModel @Inject constructor(private var api: ApiRequests, applicatio
     private val _pbVisibility = MutableLiveData<Int>()
     val pbVisibility: LiveData<Int> = _pbVisibility
 
+
+    /**
+     * Makes an api request in a coroutine to get a game and then stores it in the LiveData [_game]
+     * @param link the link for requesting the [Game]
+     */
     fun fetchGame(link: String){
         viewModelScope.launch {
             _pbVisibility.value = View.VISIBLE
@@ -57,6 +69,10 @@ class GameViewModel @Inject constructor(private var api: ApiRequests, applicatio
         }
     }
 
+    /**
+     * Makes an api request in a coroutine to get the stations and then stores it in the LiveData [_stations]
+     * @param parcour the id of the parcour for requesting the [Station]s
+     */
     fun fetchStations(parcour: Int){
         viewModelScope.launch {
             _pbVisibility.value = View.VISIBLE

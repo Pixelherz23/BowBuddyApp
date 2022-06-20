@@ -8,9 +8,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 
 import com.example.bowbuddyapp.api.requests.ApiRequests;
+import com.example.bowbuddyapp.data.Game
 import com.example.bowbuddyapp.data.PointsParcours
 import com.example.bowbuddyapp.data.Statistics
 import com.example.bowbuddyapp.data.User
+import com.example.bowbuddyapp.data.Parcours
+import com.example.bowbuddyapp.ui.game.ResultFragment
+import com.example.bowbuddyapp.ui.main.HomeFragment
 
 import javax.inject.Inject;
 
@@ -18,13 +22,23 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import retrofit2.http.GET
 import java.io.IOException
 
+
+/**
+ * ViewModel for the [ResultFragment].
+ * This class contains the logic for calculating, fetching, and sending data which will be used to display the data in the ResultFragment
+ * In order to do that the data is stored in LiveData.
+ * This gives us the ability to observe the data. More info about MutableLiveData [see](https://developer.android.com/topic/libraries/architecture/livedata?authuser=1)
+ *
+ * @author Lukas Beckmann
+ * @property api provides the methods to make request to the server
+ */
 @HiltViewModel
 class ResultViewModel @Inject constructor(private var api: ApiRequests, application: Application): AndroidViewModel(application) {
     val MAX_POINTS_DSB = 11
     val MAX_POINTS_DFBV = 20
-
 
     private val _players = MutableLiveData<List<User>>()
     val players: LiveData<List<User>> = _players
@@ -46,14 +60,35 @@ class ResultViewModel @Inject constructor(private var api: ApiRequests, applicat
         _hits.value = mutableMapOf()
         _statistics.value = mutableMapOf()
     }
+
+    /**
+     * calculates the maximum of points a user can score
+     * @param rule the rule of the [Game] to get the maxPoints for one arrow
+     * @param arrows the number of arrows
+     */
     fun getMaxPoints(rule: String ,arrows: Int) =
         if(rule == "DSB (WA)") arrows*MAX_POINTS_DSB else arrows*MAX_POINTS_DFBV
 
+
+    /**
+     * calculates the hit probability based on the [hits]
+     * @param arrows the number of arrows
+     * @param email the email in order to get the hits for a user
+     * @return the hit probability
+     */
     fun getHitProbability(arrows: Int, email: String): Double{
         val hits = hits.value?.get(email)
         return if (hits != null) hits/arrows.toDouble() * 100 else 0.0
     }
 
+    /**
+     * calculates the statistics of a user by using the old statistics
+     * @param email the email from the [User]
+     * @param rule the rule from the [Game]
+     * @param statistics the old [Statistics] from a user
+     * @param multiplayer the flag to get weather a game is multiplayer or singleplayer
+     * @return the new calculated [Statistics]
+     */
     fun getNewStatistics(email: String, rule: String, statistics: Statistics, multiplayer: Boolean): Statistics{
         val hitProb = if(statistics.hitProbability == 0) getHitProbability(getMaxHits(rule)!!, email).toInt()
                     else ((statistics.hitProbability + getHitProbability(getMaxHits(rule)!!, email))/2).toInt()
@@ -74,9 +109,19 @@ class ResultViewModel @Inject constructor(private var api: ApiRequests, applicat
         }
     }
 
+    /**
+     * calculates the maximum of hits/arrows a user as based on the [rule]
+     * @return the calculated hits
+     */
     fun getMaxHits(rule: String) =
         if(rule == "DSB (WA)") maxTargets.value?.times(2) else maxTargets.value
 
+    /**
+     * Makes an api request in a coroutine to get the hits from a user in the game and stores them in LiveData [_hits]
+     * @param email the email from the [User]
+     * @param link the link from the [Game]
+     * @param parcours the id from the [Parcours]
+     */
     private fun fetchHits(email: String, link: String, parcours: Int){
         viewModelScope.launch {
             val response = try {
@@ -99,6 +144,10 @@ class ResultViewModel @Inject constructor(private var api: ApiRequests, applicat
         }
     }
 
+    /**
+     * Makes an api request in a coroutine to get the number of targets from a parcours and stores them in LiveData [_maxTargets]
+     * @param parcours the id from the [Parcours]
+     */
     fun fetchMaxTargets(parcoursId: Int){
         viewModelScope.launch {
             val response = try {
@@ -119,6 +168,11 @@ class ResultViewModel @Inject constructor(private var api: ApiRequests, applicat
         }
     }
 
+    /**
+     * Iterates over [players] and calls [fetchHits] for all
+     * @param link the link from the [Game]
+     * @param parcours the id from the [Parcours]
+     */
     fun fetchAllHits(link: String, parcourId: Int){
         if(players.value != null){
             players.value!!.forEach {player ->
@@ -128,6 +182,12 @@ class ResultViewModel @Inject constructor(private var api: ApiRequests, applicat
         }
     }
 
+    /**
+     * Makes an api request in a coroutine to get the points on a parcour from a user in a game and stores them in LiveData [_pointsParcours]
+     * @param email the email from the [User]
+     * @param link the link from the [Game]
+     * @param parcours the id from the [Parcours]
+     */
     private fun fetchPointsParcours(email: String, link: String, parcours: Int){
         viewModelScope.launch {
             val response = try {
@@ -155,6 +215,11 @@ class ResultViewModel @Inject constructor(private var api: ApiRequests, applicat
         }
     }
 
+    /**
+     * Iterates over [players] and calls [fetchPointsParcours] for all
+     * @param link the link from the [Game]
+     * @param parcours the id from the [Parcours]
+     */
     fun fetchAllPoints(link: String, parcourId: Int){
         if(players.value != null){
             players.value!!.forEach {player ->
@@ -163,6 +228,10 @@ class ResultViewModel @Inject constructor(private var api: ApiRequests, applicat
         }
     }
 
+    /**
+     * Makes an api request in a coroutine to get users from a game and stores them in LiveData [_players]
+     * @param link the link from the [Game] for requesting the [User]s
+     */
     fun fetchUser(link: String){
         viewModelScope.launch {
             val response = try {
@@ -188,6 +257,10 @@ class ResultViewModel @Inject constructor(private var api: ApiRequests, applicat
         }
     }
 
+    /**
+     * Makes an api request in a coroutine to delete a game
+     * @param link the link from the [Game] to delete
+     */
     fun deleteGame(link: String){
         viewModelScope.launch {
             val response = try {
@@ -207,6 +280,10 @@ class ResultViewModel @Inject constructor(private var api: ApiRequests, applicat
 
     }
 
+    /**
+     * Makes an api request in a coroutine to get the statistics from a user and stores them in LiveData [_statistics]
+     * @param email the email from the [User]
+     */
     fun fetchStatistics(email: String){
         viewModelScope.launch {
             val response = try {
@@ -229,6 +306,11 @@ class ResultViewModel @Inject constructor(private var api: ApiRequests, applicat
         }
     }
 
+    /**
+     * Makes an api request in a coroutine to update the statistics from a user
+     * @param email the email from the [User]
+     * @param statistics the [Statistics] for updating the users statistics
+     */
     fun updateStatistics(email: String, statistics: Statistics) {
         viewModelScope.launch {
             val response = try {

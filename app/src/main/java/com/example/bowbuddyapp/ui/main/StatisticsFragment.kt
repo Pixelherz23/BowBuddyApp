@@ -1,6 +1,5 @@
 package com.example.bowbuddyapp.ui.main
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,10 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.bowbuddyapp.data.Statistics
 import com.example.bowbuddyapp.databinding.FragmentStatisticsBinding
-import com.example.bowbuddyapp.ui.CreateParcoursActivity
-import com.example.bowbuddyapp.viewModel.StatisticsAdapter
 import com.example.bowbuddyapp.viewModel.StatisticsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

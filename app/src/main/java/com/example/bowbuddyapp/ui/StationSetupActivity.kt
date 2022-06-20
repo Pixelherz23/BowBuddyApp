@@ -31,8 +31,6 @@ import org.json.JSONObject
  */
 @AndroidEntryPoint
 class StationSetupActivity : AppCompatActivity() {
-    //val BASE_URL = "https://dummy.restapiexample.com"
-    val BASE_URL = "https://59baf216-74eb-4959-9c0c-f38ed4849c5b.mock.pstmn.io"
     private lateinit var binding: ActivityStationSetupBinding
     private val viewModel: StationSetupViewModel by viewModels()
 
@@ -41,13 +39,6 @@ class StationSetupActivity : AppCompatActivity() {
     var tempSliderCounter = 1
     lateinit var jsonParcours: JSONObject
 
-    val idList = mutableListOf(
-        R.id.et_target1,
-        R.id.et_target2,
-        R.id.et_target3,
-        R.id.et_target4,
-        R.id.et_target5
-    )
 
     /**
      * Inflating the layout and adding functionality to the design elements
@@ -157,17 +148,6 @@ class StationSetupActivity : AppCompatActivity() {
                         job.join()
                         viewModel.sendEachTargetToServer()
                     }
-
-                    /*
-                    viewModel.sendStationToServer(x!!)
-                    viewModel._stationID.observe(this) { _stationID ->
-                        Log.i("SSA", "stationID  $_stationID changed, sending Target")
-                        viewModel.sendEachTargetToServer()
-                    }
-                    //viewModel.clear()
-                    clearFields()
-                    //viewModel.removeAllTargets()
-                     */
 
 
                 }

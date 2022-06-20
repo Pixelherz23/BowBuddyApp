@@ -28,13 +28,14 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
     /**
-     *The root url to the rest api
+     * The root url to the rest api
      *
      */
     private const val BASE_URL = "https://bow-buddy.ddns.net/api/"
 
     /**
-     *builds and provide a singleton retrofit instance.
+     * builds and provide a singleton retrofit instance.
+     * @return the [Retrofit] instance
      */
     @Singleton
     @Provides
@@ -45,7 +46,7 @@ object AppModule {
             .build()
 
     /**
-     *calling .create(ApiRequests::class.java)) on the given retrofit instance
+     * calling .create(ApiRequests::class.java)) on the given retrofit instance
      *
      * @param retrofit Pass the instance provided by provideRetrofit()
      * @return generates an implementation of the ApiRequests interface
@@ -74,6 +75,7 @@ object AppModule {
 
 
     /**
+     * Provides the last signedIn account
      * @param context Pass context of app
      * @return the last account that the user signed in with.
      */

@@ -7,12 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.bowbuddyapp.data.Game
+import com.example.bowbuddyapp.data.Parcours
 import com.example.bowbuddyapp.databinding.FragmentSingleplayerBinding
+import com.example.bowbuddyapp.viewModel.ResultViewModel
 import com.example.bowbuddyapp.viewModel.StationViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import com.example.bowbuddyapp.data.User
 
+/**
+ * Fragment to display the [Target]s and [User]s of a game provided by [StationViewModel]
+ *
+ * @author Lukas Beckmann
+ */
 @AndroidEntryPoint
 class StationFragment : Fragment() {
 
@@ -32,6 +41,11 @@ class StationFragment : Fragment() {
         return binding.root
     }
 
+
+    /**
+     * Binding the Layout and observing the data from [StationViewModel] to update the ui.
+     * Initialize and bind the [TargetAdapter] and [PlayerAdapter].
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -81,6 +95,9 @@ class StationFragment : Fragment() {
         }
     }
 
+    /**
+     * updates data on resume
+     */
     override fun onResume() {
         super.onResume()
         val stationId = arguments?.getInt(STATION_ID)!!
@@ -98,11 +115,21 @@ class StationFragment : Fragment() {
         _binding = null
     }
 
+    /**
+     *  Provides the data which is send to the Fragment
+     */
     companion object{
         var STATION_ID = "id"
         var STATION_NAME = "name"
         var GAME_LINK = "link"
         var GAME_RULE = "rule"
+        /**
+         * Instantiate a new instance of [StationFragment] with the given data as bundle
+         * @param id the id of the [Station]
+         * @param name the name of the [Station]
+         * @param link the link of the [Game]
+         * @param rule the rule of the [Game]
+         */
         @JvmStatic
         fun newInstance(id: Int, name: String, link: String, rule: String) = StationFragment().apply {
             arguments = Bundle().apply {

@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bowbuddyapp.api.requests.ApiRequests
 import com.example.bowbuddyapp.data.Parcours
 import com.example.bowbuddyapp.data.User
+import com.example.bowbuddyapp.ui.game.ResultFragment
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -18,10 +19,16 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import java.io.IOException
 import javax.inject.Inject
+import com.example.bowbuddyapp.ui.main.SignInActivity
 
 /**
- * ViewModel for the Sign In Activity
+ * ViewModel for the [SignInActivity].
+ * This class contains the logic for syncing the google acc with the database
+ * In order to do that the data is stored in LiveData.
+ * This gives us the ability to observe the data. More info about MutableLiveData [see](https://developer.android.com/topic/libraries/architecture/livedata?authuser=1)
+ *
  * @author Kai-U. Stieler
+ * @property api provides the methods to make request to the server
  */
 @HiltViewModel
 class SignInViewModel @Inject constructor(private var api: ApiRequests, application: Application): AndroidViewModel(application) {
@@ -30,7 +37,7 @@ class SignInViewModel @Inject constructor(private var api: ApiRequests, applicat
     val user = MutableLiveData<User>()
 
     /**
-     * checks if the user exists in DB. Depending on the result, [isInDatabase] will be true or false
+     * checks if the [User] exists in DB. Depending on the result, [isInDatabase] will be true or false
      */
     fun getUser() {
         viewModelScope.launch() {
@@ -66,7 +73,7 @@ class SignInViewModel @Inject constructor(private var api: ApiRequests, applicat
     }
 
     /**
-     * sending user to database. Depeding if [isInDatabase] is true
+     * sending [User] to database. Depeding if [isInDatabase] is true
      */
     fun createUser() {
         if (isInDatabase.value == false) {

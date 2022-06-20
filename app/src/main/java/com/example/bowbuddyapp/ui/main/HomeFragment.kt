@@ -111,8 +111,9 @@ class HomeFragment() : Fragment() {
 
         }
     }
+
     /**
-     *This is necessary in order to remove a parcours from the ui when the user deletes the parcours
+     * This is necessary in order to remove a parcours from the ui when the user deletes the parcours
      */
     override fun onResume() {
         super.onResume()

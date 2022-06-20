@@ -7,7 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.bowbuddyapp.data.Station
 import kotlin.properties.Delegates
-
+/**
+ * Adapter for creating a Fragment for each list element of ([stations]) and binding to pageviewer in [GameActivity]
+ *
+ * @author Lukas Beckmann
+ */
 class StationAdapter(activity: AppCompatActivity): FragmentStateAdapter(activity) {
 
     private val diffCallback = object: DiffUtil.ItemCallback<Station>(){
@@ -27,6 +31,7 @@ class StationAdapter(activity: AppCompatActivity): FragmentStateAdapter(activity
     lateinit var rule: String
     var parcoursId = 0
     var multiplayer = false
+
 
     override fun createFragment(position: Int) =
         if(position < stations.size) StationFragment.newInstance(stations[position].id, stations[position].name, link, rule)

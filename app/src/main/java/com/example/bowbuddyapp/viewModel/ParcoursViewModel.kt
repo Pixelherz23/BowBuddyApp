@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.lifecycle.*
 import com.example.bowbuddyapp.api.requests.ApiRequests
 import com.example.bowbuddyapp.data.Game
+import com.example.bowbuddyapp.data.User
 import com.example.bowbuddyapp.data.Parcours
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import dagger.hilt.android.internal.Contexts.getApplication
@@ -15,18 +16,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Call
+import com.example.bowbuddyapp.ui.main.HomeFragment
 import retrofit2.HttpException
 import java.io.IOException
 import java.util.*
 import javax.inject.Inject
 
 /**
- * ViewModel for the HomeFragment. The class stores the parcours as LiveData.
- * This gives us the ability to observe the data which is helpful in the HomeFragment. More info about MutableLiveData [see](https://developer.android.com/topic/libraries/architecture/livedata?authuser=1)
- * ParcoursViewModel is also responsible for handeling parcours related api requests
+ * ViewModel for the [HomeFragment].
+ * ParcoursViewModel is responsible for handling parcours related api requests and stores the parcours as LiveData.
+ * This gives us the ability to observe the data. More info about MutableLiveData [see](https://developer.android.com/topic/libraries/architecture/livedata?authuser=1)
+ *
  * @author Kai-U. Stieler, Lukas Beckmann (co. author)
+ * @property api provides the methods to make request to the server
  */
 @HiltViewModel
 class ParcoursViewModel @Inject constructor(private var api: ApiRequests, application: Application, var acct : GoogleSignInAccount): AndroidViewModel(application) {
@@ -50,6 +52,9 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
         generateLink()
     }
 
+    /**
+     * generates a link for a game, which is used to sync data between app and database
+     */
     fun generateLink(){
         val prefix = "https://bow-buddy.com/"
         var randomStr: String = UUID.randomUUID().toString()
@@ -61,8 +66,8 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
     }
 
     /**
-     * requests all Parcours related to given email
-     * @param email the useremail
+     * Makes an api request in a coroutine to get the parcours and then stores it in the LiveData [_parcours]
+     * @param email the email from the user for requesting [Parcours]
      */
     fun fetchData(email: String){
         Log.i("PVM Before Fetch _Parcours",_parcours.value.toString() )
@@ -100,7 +105,10 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
         }
     }
 
-    //TODO kann das weg?
+    /**
+     * Makes an api request in a coroutine to send a new game
+     * @param email the email from the user for assigning the created game to the user
+     */
     fun sendGame(email: String){
         viewModelScope.launch() {
 
@@ -121,11 +129,13 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
                 Toast.makeText(getApplication<Application>().applicationContext
                     , "Sending failed", Toast.LENGTH_SHORT).show()
             }
-            // pbVisibilityLiveData.value = View.GONE
         }
     }
 
-
+    /**
+     * Makes an api request in a coroutine to check weather the game exist and than stores true or false in LiveData [_gameExists]
+     * @param link the link for requesting the [Game]
+     */
     fun fetchGame(link: String){
         viewModelScope.launch {
             val response = try{
@@ -149,11 +159,13 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
 
 
     /**
-     * request to delete a specific parcours. the parcours will be deleted that has the same ID as found in parcoursIdTodelete
+     * Makes an api request in a coroutine to delete a specific parcours.
+     * The parcours will be deleted that has the same ID as found in parcoursIdTodelete
+     * @return a [Job] to provide the ability to observe when the coroutine has finished
      */
     fun deleteParcours() : Job {
 
-        var x = viewModelScope.launch() {
+        val x = viewModelScope.launch() {
             val response = try{
                api.deleteParcours(parcoursIdTodelete.value!!)
             } catch(e: IOException){
@@ -177,6 +189,11 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
         return x
     }
 
+    /**
+     * Makes an api request in a coroutine to assign a game to the user
+     * @param email the email from the [user]
+     * @param link the link from the [Game] for updating the user]
+     */
     fun updateUser(email: String, link: String){
         viewModelScope.launch() {
             val response = try{

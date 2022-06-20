@@ -11,6 +11,7 @@ import com.example.bowbuddyapp.api.requests.ApiRequests
 import com.example.bowbuddyapp.data.Parcours
 import com.example.bowbuddyapp.data.Station
 import com.example.bowbuddyapp.data.Target
+import com.example.bowbuddyapp.ui.main.SignInActivity
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -22,14 +23,21 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.lang.NullPointerException
 import javax.inject.Inject
+import com.example.bowbuddyapp.ui.StationSetupActivity
 
 
 //TODO more logic form StationSetup to ViewMOdel (e.g Landscape mode deletes the input of user)
 
 /**
- * ViewModel for holding data and sending it, when Stations and Targets are created
+ * ViewModel for the [StationSetupActivity].
+ * It is used for holding data and sending it, when Stations and Targets are created
+ * In order to do that the data is stored in LiveData.
+ * This gives us the ability to observe the data. More info about MutableLiveData [see](https://developer.android.com/topic/libraries/architecture/livedata?authuser=1)
+ *
  * @author Kai-U. Stieler
+ * @property api provides the methods to make request to the server
  */
+
 @HiltViewModel
 class StationSetupViewModel @Inject constructor(private var api: ApiRequests): ViewModel() {
 

@@ -69,15 +69,14 @@ object AppModule {
     @Singleton
     @Provides
     fun provideGoogleSignInClient(@ApplicationContext context : Context): GoogleSignInClient =
-        GoogleSignIn.getClient(context, GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestProfile().build())
+        GoogleSignIn.getClient(context, GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build())
+
 
     /**
      * @param context Pass context of app
      * @return the last account that the user signed in with.
      */
+
     @Provides
     fun provideGoogleSignInAcc(@ApplicationContext context : Context) : GoogleSignInAccount =  GoogleSignIn.getLastSignedInAccount(context)!!
-
-
-
 }

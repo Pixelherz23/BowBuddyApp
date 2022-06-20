@@ -7,8 +7,10 @@ data class User(
     val email: String,
     @SerializedName("nameUser")
     val name: String,
+    @SerializedName("imageUser")
+    val profilImage: String,
     @SerializedName("Game_idGame")
-    val idGame: Int,
+    val idGame: String,
     @SerializedName("Statistics_idStatistics")
     val idStatistics: Int
 )

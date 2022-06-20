@@ -13,30 +13,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
 
             <TextView
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30dp"
+                android:text="Spielregeln"
 
-                android:text="Spielregeln" />
+                android:textSize="30dp" />
 
             <TextView
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:text="Punkteverteilung gem. Sportordnung DSB " />
+                android:text="Punkteverteilung gem. Sportordnung DSB "
+                android:textSize="20dp" />
 
             <TextView
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Jeder Spieler hat 3 Pfeile (egal ob du alleine oder zu mehreren spielst). Treffer imm innersten Ring geben 11 Punkte, der nächste 10, der äußerste 8 und Körpertreffer 5 Punkte." />
+                android:text="Jeder Spieler hat 2 Pfeile (egal ob du alleine oder zu mehreren spielst). Treffer imm innersten Ring geben 11 Punkte, der nächste 10, der äußerste 8 und Körpertreffer 5 Punkte." />
 
             <ImageView
 
@@ -50,14 +50,14 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:text="Punkteverteilung gem. Sportordnung DFBV " />
+                android:text="Punkteverteilung gem. Sportordnung DFBV "
+                android:textSize="20dp" />
 
             <TextView
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Jeder Spieler hat 3 Pfeile (egal ob du alleine oder zu mehreren spielst). Bei dieser Spielordnung sind die Punkte zusätzlich vom Pfeil abhängig. Für Pfeile im äußersten Ring gilt: 1. Pfeil: 20P., 2. Pfeil: 18P. 3. Pfeil: 16 Punkte. Für alle restlichen Treffer gilt: 1. Pfeil 18 Punkte, 2. Pfeil 14 Punkte, 3. Pfeil 10 Punkte." />
+                android:text="Jeder Spieler hat 3 Pfeile aber nur der erste der Trifft zählt (egal ob du alleine oder zu mehreren spielst). Dabei sind die Punkte zusätzlich vom Pfeil abhängig. Für Pfeile im äußersten Ring gilt: 1. Pfeil: 20P., 2. Pfeil: 18P. 3. Pfeil: 16 Punkte. Für alle restlichen Treffer gilt: 1. Pfeil 18 Punkte, 2. Pfeil 14 Punkte, 3. Pfeil 10 Punkte." />
 
             <ImageView
                 android:id="@+id/imageView2"
@@ -69,14 +69,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30dp"
-                android:text="Was gilt als Treffer?" />
+                android:text="Was gilt als Treffer?"
+                android:textSize="30dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:text="DSB" />
+                android:text="DSB"
+                android:textSize="20dp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -92,8 +93,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:text="DFBV" />
+                android:text="DFBV"
+                android:textSize="20dp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -104,7 +106,7 @@
                 android:layout_width="350dp"
                 android:layout_height="350dp"
                 android:layout_gravity="center"
-             android:src="@drawable/trennlinie_durchtrennt" />
+                android:src="@drawable/trennlinie_durchtrennt" />
 
 
         </LinearLayout>

@@ -54,7 +54,7 @@ class CreateParcoursActivity : AppCompatActivity() {
 
             //TODO Data class maybe should have CITY and STREET. Not only "address"
             //T
-            var parcours = Parcours(
+            val parcours = Parcours(
                 0,
                 binding.editTextParcoursname.text.toString(),
                 binding.editTextCity.text.toString(),

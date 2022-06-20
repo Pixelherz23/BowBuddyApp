@@ -39,25 +39,26 @@ class SignInViewModel @Inject constructor(private var api: ApiRequests, applicat
                 api.getUser(user.value!!.email)
 
             } catch (e: IOException) {
-                Log.e("SIVM", "IOException, you might not have internet connection")
+                Log.e("getUser", "IOException, you might not have internet connection")
 
                 return@launch
             } catch (e: HttpException) {
-                Log.e("SIVM", "HttpException, unexpected response")
+                Log.e("getUser", "HttpException, unexpected response")
 
                 return@launch
             }
 
             if (response.isSuccessful && response.body() != null) {
-                Log.i("SIVM", "Response Successful, User in Database found")
+                Log.i("getUser", "Response Successful, User in Database found")
+
                 isInDatabase.value = true
 
             } else if (response.code() == 404) {
-                Log.i("SIVM", "User not in Database")
+                Log.i("getUser", "User not in Database")
                 isInDatabase.value = false
 
             } else {
-                Log.e("SIVM", "Response not Successful")
+                Log.e("getUser", "Response not Successful: ${response.toString()}")
 
             }
 
@@ -74,11 +75,11 @@ class SignInViewModel @Inject constructor(private var api: ApiRequests, applicat
                     api.createUser(user.value!!)
 
                 } catch (e: IOException) {
-                    Log.e("SIVM", "IOException, you might not have internet connection")
+                    Log.e("createUser(", "IOException, you might not have internet connection")
 
                     return@launch
                 } catch (e: HttpException) {
-                    Log.e("SIVM", "HttpException, unexpected response")
+                    Log.e("createUser(", "HttpException, unexpected response")
 
                     return@launch
                 }
@@ -87,7 +88,7 @@ class SignInViewModel @Inject constructor(private var api: ApiRequests, applicat
                     isInDatabase.value = true
 
                 } else {
-                    Log.e("SIVM", "Response not Successful")
+                    Log.e("createUser", "Response not Successful: ${response.toString()}")
                 }
 
             }

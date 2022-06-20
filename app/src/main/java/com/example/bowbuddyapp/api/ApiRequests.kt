@@ -18,8 +18,14 @@ interface ApiRequests {
     @GET("user/{email}")
     suspend fun getUser(@Path("email") email: String): Response<User>
 
+    @GET("user/game")
+    suspend fun getUserGame(@Query("link") link: String): Response<List<User>>
+
     @POST("user")
     suspend fun createUser(@Body requestBody: User): Response<ResponseBody>
+
+    @PUT("user/{email}")
+    suspend fun updateUserGame(@Path("email") email: String, @Query("link") link: String): Response<ResponseBody>
 
     @GET("parcours/{email}")
     suspend fun getParcours(@Path("email") email: String): Response<List<Parcours>>
@@ -69,4 +75,17 @@ interface ApiRequests {
     @DELETE("parcours/{id}")
     suspend fun deleteParcours(@Path("id") id: String): Response<ResponseBody>
 
+    @GET("points/hits/{email}/{parcours}")
+    suspend fun getHits(@Path("email" ) email: String,
+                        @Path("parcours", ) parcours: Int,
+                        @Query("link" ) link: String ): Response<Int>
+
+    @GET("targets/count/{parcours}")
+    suspend fun getMaxTargets(@Path("parcours", ) parcours: Int): Response<Int>
+
+    @DELETE("game")
+    suspend fun deleteGame(@Query("link") link: String): Response<ResponseBody>
+
+    @PUT("statistics/{email}")
+    suspend fun updateStatistics(@Path("email") email: String, @Body requestBody: Statistics): Response<ResponseBody>
 }

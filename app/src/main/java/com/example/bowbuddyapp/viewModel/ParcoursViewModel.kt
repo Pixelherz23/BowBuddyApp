@@ -19,6 +19,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -39,19 +40,24 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
     val link : LiveData<String> = linkLiveData
     val game = MutableLiveData<Game>()
 
+    private val _gameExists = MutableLiveData<Boolean>()
+    val gameExists: LiveData<Boolean> = _gameExists
+
     val parcoursIdTodelete = MutableLiveData<String>()
 
     init {
-        //TODO change this static implementation [DONE]
         fetchData(acct.email.toString())
+        generateLink()
     }
 
     fun generateLink(){
-        val prefix = "https://bowbuddy.com/"
-        val charset = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-        val link = List(10){ charset.random() }.joinToString("")
+        val prefix = "https://bow-buddy.com/"
+        var randomStr: String = UUID.randomUUID().toString()
+        while (randomStr.length < 10) {
+            randomStr += UUID.randomUUID().toString()
+        }
+        val link = randomStr.substring(0, 10)
         linkLiveData.value = prefix + link
-
     }
 
     /**
@@ -80,7 +86,6 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
 
 
             }else if(response.code() == 404){
-                //_parcours.value?.clear()
                 _parcours.value = listOf()
 
 
@@ -112,16 +117,41 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
                 Toast.makeText(getApplication<Application>().applicationContext
                     , "Sending success", Toast.LENGTH_SHORT).show()
             }else{
-                Log.e("PVM", "Response not Successful")
+                Log.e("PVM", "Response not Successful: ${response.code()}")
                 Toast.makeText(getApplication<Application>().applicationContext
                     , "Sending failed", Toast.LENGTH_SHORT).show()
             }
             // pbVisibilityLiveData.value = View.GONE
         }
     }
+
+
+    fun fetchGame(link: String){
+        viewModelScope.launch {
+            val response = try{
+                api.getGame(link)
+            } catch(e: IOException){
+                Log.e("GVM", "IOException, you might not have internet connection")
+                return@launch
+            } catch (e: HttpException){
+                Log.e("GVM", "HttpException, unexpected response")
+                return@launch
+            }
+            if(response.isSuccessful && response.body() != null) {
+                _gameExists.value = true
+            }else if(response.code() == 404){
+                _gameExists.value = false
+            }else{
+                Log.e("GVM", "Response not Successful: ${response.code()}")
+            }
+        }
+    }
+
+
     /**
      * request to delete a specific parcours. the parcours will be deleted that has the same ID as found in parcoursIdTodelete
      */
+
     fun deleteParcours() : Job {
 
         var x = viewModelScope.launch() {
@@ -146,6 +176,29 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
         }
 
         return x
+    }
+
+    fun updateUser(email: String, link: String){
+        viewModelScope.launch() {
+            val response = try{
+                api.updateUserGame(email, link)
+            } catch(e: IOException){
+                Log.e("PVM", "IOException, you might not have internet connection")
+                return@launch
+            } catch (e: HttpException){
+                Log.e("PVM", "HttpException, unexpected response")
+                return@launch
+            }
+            if(response.isSuccessful) {
+                Toast.makeText(getApplication<Application>().applicationContext
+                    , "Sending success", Toast.LENGTH_SHORT).show()
+            }else{
+                Log.e("PVM", "Response not Successful")
+                Toast.makeText(getApplication<Application>().applicationContext
+                    , "Sending failed", Toast.LENGTH_SHORT).show()
+            }
+
+        }
     }
 
 }

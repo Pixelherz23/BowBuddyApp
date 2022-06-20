@@ -1,19 +1,17 @@
 package com.example.bowbuddyapp.ui.game
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentContainer
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.bowbuddyapp.R
 import com.example.bowbuddyapp.databinding.FragmentSingleplayerBinding
 import com.example.bowbuddyapp.viewModel.StationViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class StationFragment : Fragment() {
@@ -21,6 +19,9 @@ class StationFragment : Fragment() {
     private val viewModel: StationViewModel by viewModels()
     private var _binding: FragmentSingleplayerBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var acct : GoogleSignInAccount
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,39 +38,59 @@ class StationFragment : Fragment() {
         val stationId = arguments?.getInt(STATION_ID)!!
         val stationName = arguments?.getString(STATION_NAME)!!
         val link = arguments?.getString(GAME_LINK)!!
-        val targetAdapter = TargetAdapter(viewModel)
+        val rule = arguments?.getString(GAME_RULE)!!
+
+        val targetAdapter = TargetAdapter(viewModel, rule, link)
+        val playerAdapter = PlayerAdapter()
 
         viewModel.apply {
             fetchTargets(stationId)
+            fetchUser(link)
+
             targets.observe(viewLifecycleOwner){ targets ->
                 targetAdapter.targets = targets
-                fetchPoints()
-
+                fetchAllPoints(link, acct.email!!)
             }
-            pointsTargets.observe(viewLifecycleOwner){
-                it.forEachIndexed { index, points ->
+            player.observe(viewLifecycleOwner){ player ->
+                playerAdapter.players = player
+                fetchAllPoints(link, stationId)
+            }
+            pointsTargets.observe(viewLifecycleOwner){ pointsList ->
+                pointsList.forEachIndexed { index, points ->
                     targetAdapter.notifyItemChanged(index, points.points)
+                }
+                fetchAllPoints(link, stationId)
+            }
+            pointsStation.observe(viewLifecycleOwner){ pointsList ->
+                pointsList.forEachIndexed { index, points ->
+                    playerAdapter.notifyItemChanged(index, points.points)
                 }
             }
         }
 
         binding.apply {
             tvStationName.text = stationName
-            tvName.text = "MaxMuster"
-            viewModel.pointsStation.observe(viewLifecycleOwner){ points ->
-                tvPoints.text = points.points.toString() + "P"
+            rvPlayer.apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = playerAdapter
             }
             rvSingleplayer.apply {
                 layoutManager = LinearLayoutManager(context)
                 adapter = targetAdapter
-
             }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        fetchPoints()
+        val stationId = arguments?.getInt(STATION_ID)!!
+        val link = arguments?.getString(GAME_LINK)!!
+
+        viewModel.apply {
+            fetchUser(link)
+            fetchAllPoints(link, acct.email!!)
+            fetchAllPoints(link, stationId)
+        }
     }
 
     override fun onDestroyView() {
@@ -77,30 +98,18 @@ class StationFragment : Fragment() {
         _binding = null
     }
 
-    private fun fetchPoints(){
-        val stationId = arguments?.getInt(STATION_ID)!!
-        val link = arguments?.getString(GAME_LINK)!!
-
-        if(viewModel.targets.value != null){
-            viewModel.apply {
-                targets.value!!.forEachIndexed { index, target ->
-                    fetchPoints("test@api.com", link, target.id, index).toString()
-                }
-                fetchPointsStation("test@api.com", link, stationId)
-            }
-        }
-    }
-
     companion object{
         var STATION_ID = "id"
         var STATION_NAME = "name"
         var GAME_LINK = "link"
+        var GAME_RULE = "rule"
         @JvmStatic
-        fun newInstance(id: Int, name: String, link: String) = StationFragment().apply {
+        fun newInstance(id: Int, name: String, link: String, rule: String) = StationFragment().apply {
             arguments = Bundle().apply {
                 putInt(STATION_ID, id)
                 putString(STATION_NAME, name)
                 putString(GAME_LINK, link)
+                putString(GAME_RULE, rule)
             }
         }
     }

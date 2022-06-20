@@ -42,15 +42,18 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if(acct != null){
-            binding.apply {
-                tvGoogleName.text = acct.displayName
-                tvGoogleEmail.text = acct.email
-                Log.i("GOOGLE", acct.photoUrl.toString())
-                avGoogleImage.loadImage(acct.photoUrl.toString())
+        binding.apply {
+            tvGoogleName.text = acct.displayName
+            tvGoogleEmail.text = acct.email
+            Log.i("GOOGLE", acct.photoUrl.toString())
+            avGoogleImage.loadImage(acct.photoUrl)
+
+
+       
 
                 Log.i("account data", acct.displayName.toString())
             }
+
 
         }
         val homeFragment = HomeFragment()

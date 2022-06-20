@@ -22,8 +22,9 @@ class GameActivity : AppCompatActivity() {
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val link = intent.getStringExtra("link")!!
+        val multiplayer = intent.getBooleanExtra("multiplayer", false)
 
-        val stationAdapter = StationAdapter(this, link)
+        val stationAdapter = StationAdapter(this)
         viewModel.apply {
             fetchGame(link)
             pbVisibility.observe(this@GameActivity){ visibility ->
@@ -32,6 +33,10 @@ class GameActivity : AppCompatActivity() {
 
             game.observe(this@GameActivity){game ->
                 Log.i("GAME", game.link)
+                stationAdapter.link = game.link
+                stationAdapter.rule = game.gameRule
+                stationAdapter.parcoursId = game.idParcours
+                stationAdapter.multiplayer = multiplayer
                 viewModel.fetchStations(game.idParcours)
             }
 

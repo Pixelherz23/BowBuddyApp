@@ -8,7 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bowbuddyapp.api.requests.ApiRequests
 import com.example.bowbuddyapp.data.Game
+import com.example.bowbuddyapp.data.Station
 import com.example.bowbuddyapp.data.Statistics
+import com.example.bowbuddyapp.data.User
 import com.example.bowbuddyapp.data.Target
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.gson.Gson
@@ -22,13 +24,16 @@ import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
-
+import com.example.bowbuddyapp.ui.main.StatisticsFragment
 
 /**
- * ViewModel for the StatisticFragment. The class stores the [statistics] as LiveData.
+ * ViewModel for the [StatisticsFragment]. The class stores the [statistics] as LiveData.
  * This gives us certain advantages. For more infos [see](https://developer.android.com/topic/libraries/architecture/livedata?authuser=1)
  * StatisticsViewModel is also responsible for handeling statistics related api requests
- * @author Kai-U. Stieler, Lukas Beckmann (co. author)
+ *
+ * @author Kai-U. Stieler
+ * @property api provides the methods to make request to the server
+ * @property acct the google account instance
  */
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(private var api: ApiRequests, var acct: GoogleSignInAccount): ViewModel() {
@@ -39,14 +44,12 @@ class StatisticsViewModel @Inject constructor(private var api: ApiRequests, var 
     val pbVisibility: LiveData<Int> = pbVisibilityLiveData
 
     init {
-        //"test@api.com"
-        //TODO change this static implementation
         getStatistics(acct.email.toString())
     }
 
     /**
-     * API requests for retrieving user specific statistical data
-     * @param email email of the user
+     * Makes an api request in a coroutine to get the [Statistics] of a user and then stores it in the LiveData [statistics]
+     * @param email the email from the [User] of the statistivs
      */
     fun getStatistics(email: String){
         viewModelScope.launch() {

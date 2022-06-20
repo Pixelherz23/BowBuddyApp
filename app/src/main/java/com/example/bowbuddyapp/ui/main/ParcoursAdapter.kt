@@ -72,9 +72,10 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
         return ParcourViewHolder(binding)
     }
 
-    //binding the data to our views/items
-    //adding functionality
-
+    /**
+     * binds the data for each [parcours] to the item card
+     * adding dialogs to the cards
+     */
     override fun onBindViewHolder(holder: ParcourViewHolder, position: Int) {
         val parcour = parcours[position]
         val context = holder.itemView.context

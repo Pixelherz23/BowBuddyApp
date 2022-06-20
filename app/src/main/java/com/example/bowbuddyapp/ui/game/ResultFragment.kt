@@ -12,13 +12,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bowbuddyapp.data.Statistics
 import com.example.bowbuddyapp.databinding.FragmentResultBinding
 import com.example.bowbuddyapp.ui.main.MainActivity
+import com.example.bowbuddyapp.viewModel.GameViewModel
 import com.example.bowbuddyapp.viewModel.ResultViewModel
 import com.example.bowbuddyapp.viewModel.StationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-
+import com.example.bowbuddyapp.data.Game
+import com.example.bowbuddyapp.data.Parcours
+/**
+ * Fragment to display the results provided by [ResultViewModel]
+ *
+ * @author Lukas Beckmann
+ */
 @AndroidEntryPoint
 class ResultFragment: Fragment(){
 
@@ -34,6 +41,11 @@ class ResultFragment: Fragment(){
         return binding.root
     }
 
+
+    /**
+     * Binding the Layout and observing the data from [ResultViewModel] to update the ui.
+     * Initialize and bind the [ResultAdapter].
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -91,6 +103,9 @@ class ResultFragment: Fragment(){
         }
     }
 
+    /**
+     * updates data on resum
+     */
     override fun onResume(){
         super.onResume()
         val parcoursId = arguments?.getInt(PARCOURS_ID)!!
@@ -101,11 +116,22 @@ class ResultFragment: Fragment(){
         }
     }
 
+    /**
+     *  Provides the data which is send to the Fragment
+     */
     companion object{
         var GAME_LINK = "link"
         var GAME_RULE = "rule"
         var PARCOURS_ID = "stationId"
         var MULTIPLAYER = "multiplayer"
+
+        /**
+         * Instantiated a new instance of [ResultFragment] with the given data as bundle
+         * @param link the link of the [Game]
+         * @param rule the rule of the [Game]
+         * @param parcoursId the id of the [Parcours]
+         * @param multiplayer the flag whether the game is in singleplayer or multiplayer
+         */
         @JvmStatic
         fun newInstance(link: String, rule: String, parcoursId: Int, multiplayer: Boolean) = ResultFragment().apply {
             arguments = Bundle().apply {

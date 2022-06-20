@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bowbuddyapp.api.requests.ApiRequests
 import com.example.bowbuddyapp.data.*
 import com.example.bowbuddyapp.data.Target
+import com.example.bowbuddyapp.ui.game.ResultFragment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -18,8 +19,17 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.text.FieldPosition
 import javax.inject.Inject
+import com.example.bowbuddyapp.ui.game.StationFragment
 
-//TODO Documentation needed
+/**
+ * ViewModel for the [StationFragment].
+ * This class contains the logic for getting the targets of a station and updating the points
+ * In order to do that the data is stored in LiveData.
+ * This gives us the ability to observe the data. More info about MutableLiveData [see](https://developer.android.com/topic/libraries/architecture/livedata?authuser=1)
+ *
+ * @author Lukas Beckmann
+ * @property api provides the methods to make request to the server
+ */
 @HiltViewModel
 class StationViewModel @Inject constructor(private var api: ApiRequests, application: Application): AndroidViewModel(application) {
 
@@ -38,6 +48,11 @@ class StationViewModel @Inject constructor(private var api: ApiRequests, applica
     private val _pbVisibility = MutableLiveData<Int>()
     val pbVisibility: LiveData<Int> = _pbVisibility
 
+
+    /**
+     * Makes an api request in a coroutine to get the targets and then stores it in the LiveData [_targets]
+     * @param station the id from the [Station] to request the [Target]s
+     */
     fun fetchTargets(station: Int) {
         viewModelScope.launch {
             _pbVisibility.value = View.VISIBLE
@@ -65,6 +80,10 @@ class StationViewModel @Inject constructor(private var api: ApiRequests, applica
         }
     }
 
+    /**
+     * Makes an api request in a coroutine to get users from a game and stores them in LiveData [_player]
+     * @param link the link from the [Game] for requesting the [User]s
+     */
     fun fetchUser(link: String){
         viewModelScope.launch {
             val response = try {
@@ -87,6 +106,14 @@ class StationViewModel @Inject constructor(private var api: ApiRequests, applica
         }
     }
 
+
+    /**
+     * Makes an api request in a coroutine to get the [Points] on a target from a user in a game and stores them in LiveData [_pointsTargets]
+     * @param email the email from the [User]
+     * @param link the link from the [Game]
+     * @param target the id from the [Target]
+     * @param position the position for the [_pointsStation]
+     */
     private fun fetchPoints(email: String, link: String, target: Int, position: Int) {
         viewModelScope.launch {
             val response = try {
@@ -108,6 +135,11 @@ class StationViewModel @Inject constructor(private var api: ApiRequests, applica
         }
     }
 
+    /**
+     * Iterates over [targets] and calls [fetchPoints] for all
+     * @param link the link from the [Game]
+     * @param email the email from the [User]
+     */
     fun fetchAllPoints(link: String, email: String){
         if(targets.value != null){
             targets.value!!.forEachIndexed { index, target ->
@@ -116,6 +148,13 @@ class StationViewModel @Inject constructor(private var api: ApiRequests, applica
         }
     }
 
+    /**
+     * Makes an api request in a coroutine to get the [PointsStation] on a station from a user in a game and stores them in LiveData [_pointsStation]
+     * @param email the email from the [User]
+     * @param link the link from the [Game]
+     * @param station the id from the [Station]
+     * @param position the position for the [_pointsStation]
+     */
     private fun fetchPointsStation(email: String, link: String, station: Int, position: Int) {
         viewModelScope.launch {
             val response = try {
@@ -137,6 +176,12 @@ class StationViewModel @Inject constructor(private var api: ApiRequests, applica
         }
     }
 
+
+    /**
+     * Iterates over [player] and calls [fetchPointsStation] for all
+     * @param link the link from the [Game]
+     * @param parcours the id from the [Parcours]
+     */
     fun fetchAllPoints(link: String, stationId: Int){
         if(player.value != null){
             player.value!!.forEachIndexed { index, player ->
@@ -148,6 +193,11 @@ class StationViewModel @Inject constructor(private var api: ApiRequests, applica
 
 
 
+    /**
+     * Makes an api request in a coroutine to update the points and call [fetchPoints] for automatically fetch the new data
+     * @param points the [Points] to update
+     * @param position the position in the List [pointsTargets] to update after sending
+     */
     fun sendPoints(points: Points, position: Int) {
         viewModelScope.launch {
             val response = try {
@@ -171,8 +221,17 @@ class StationViewModel @Inject constructor(private var api: ApiRequests, applica
         }
     }
 
+    fun getDsbValues() = arrayOf("11", "10", "8", "5", "0")
+    fun getDfbvValues(arrow: Int) = arrayOf((24-arrow*4).toString(), (22-arrow*4).toString())
+
 
 }
+
+/**
+ * reassign the LiveData to notify the observer.
+ * This is usfull when e.g collections are used in liveData
+ * @receiver [MutableLiveData]
+ */
 fun <T> MutableLiveData<T>.notifyObserver() {
     this.value = this.value
 }

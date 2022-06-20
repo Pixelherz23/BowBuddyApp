@@ -11,9 +11,16 @@ import io.getstream.avatarview.coil.loadImage
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
+/**
+ * Adapter for binding each list element of ([players]) in an item card in [StationFragment]
+ * The adapter is necessary for the recyclerview
+ *
+ * @author Lukas Beckmann
+ */
 class PlayerAdapter(): RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>() {
 
     inner class PlayerViewHolder(val binding: ItemPlayerBinding): RecyclerView.ViewHolder(binding.root)
+
 
     private val diffCallback = object: DiffUtil.ItemCallback<User>(){
         override fun areItemsTheSame(oldItem: User, newItem: User): Boolean =
@@ -34,6 +41,7 @@ class PlayerAdapter(): RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>() {
         return PlayerViewHolder(binding)
     }
 
+
     override fun onBindViewHolder(holder: PlayerViewHolder, position: Int) {
         val player = players[position]
         holder.binding.apply {
@@ -43,6 +51,10 @@ class PlayerAdapter(): RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>() {
         }
     }
 
+    /**
+     * Updates after notify the ui
+     * @param payloads the data that has changed
+     */
     override fun onBindViewHolder(holder: PlayerViewHolder, position: Int, payloads: MutableList<Any>) {
         if(!payloads.isEmpty()){
             if(payloads.get(0) is Int){

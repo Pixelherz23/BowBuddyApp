@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bowbuddyapp.api.requests.ApiRequests
 import com.example.bowbuddyapp.data.Parcours
+import com.example.bowbuddyapp.ui.game.GameActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -16,10 +17,14 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.lang.NullPointerException
 import javax.inject.Inject
+import com.example.bowbuddyapp.ui.CreateParcoursActivity
 
 /**
- * ViewModel sending the created parcours to the server
+ * ViewModel for the [CreateParcoursActivity].
+ * This class is responsible for sending a new parcours to the database.
+ *
  * @author Kai-U. Stieler
+ * @property api provides the methods to make request to the server
  */
 @HiltViewModel
 class CreateParcoursViewModel @Inject constructor(private var api: ApiRequests): ViewModel() {
@@ -28,8 +33,7 @@ class CreateParcoursViewModel @Inject constructor(private var api: ApiRequests):
      val parcours= MutableLiveData<Parcours>()
 
     /**
-     * Sending the parcours (without stations  and targets. For that go to [StationSetupViewModel]) to server
-     *
+     * Makes an api request in a coroutine to send the parcours
      */
     fun sendParcours() {
         viewModelScope.launch() {

@@ -27,6 +27,15 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
+/**
+ * Adapter for binding each list element of ([targets]) to an item card in [StationFragment]
+ * The adapter is necessary for the recyclerview
+ *
+ * @author Lukas Beckmann
+ * @property viewModel is responsible for the data
+ * @property rule the rule with the game is played
+ * @property link the link of the game
+ */
 class TargetAdapter(val viewModel: StationViewModel, val rule: String, val link: String): RecyclerView.Adapter<TargetAdapter.TargetViewHolder>(){
 
     inner class TargetViewHolder(val binding: ItemTargetCardBinding): RecyclerView.ViewHolder(binding.root)
@@ -56,6 +65,11 @@ class TargetAdapter(val viewModel: StationViewModel, val rule: String, val link:
         return TargetViewHolder(binding)
     }
 
+
+    /**
+     * binds the data for each [targets] to the item card
+     * add a dialog for enter the points
+     */
     override fun onBindViewHolder(holder: TargetViewHolder, position: Int) {
         val target = targets[position]
         val context = holder.itemView.context
@@ -66,20 +80,20 @@ class TargetAdapter(val viewModel: StationViewModel, val rule: String, val link:
             dialogBinding.apply {
                 npFirstArrow.apply {
                     minValue = 0
-                    maxValue = getDsbValues().size-1
-                    displayedValues = getDsbValues()
+                    maxValue = viewModel.getDsbValues().size-1
+                    displayedValues = viewModel.getDsbValues()
                 }
                 npSecondArrow.apply {
                     minValue = 0
-                    maxValue = getDsbValues().size-1
-                    displayedValues = getDsbValues()
+                    maxValue = viewModel.getDsbValues().size-1
+                    displayedValues = viewModel.getDsbValues()
                 }
 
             }
             AlertDialog.Builder(context)
                 .setTitle(target.name)
                 .setPositiveButton("Speichern") { _, _ ->
-                    val displayedValues = getDsbValues()
+                    val displayedValues = viewModel.getDsbValues()
                     val firsArrow = dialogBinding.npFirstArrow.value
                     val secondArrow = dialogBinding.npSecondArrow.value
                     val points = displayedValues[firsArrow].toInt() + displayedValues[secondArrow].toInt()
@@ -96,13 +110,13 @@ class TargetAdapter(val viewModel: StationViewModel, val rule: String, val link:
             val dialogBinding = CustomAlertdialogPointsDfbvBinding.inflate(LayoutInflater.from(context))
             dialogBinding.apply {
                 numberPicker.minValue = 0
-                numberPicker.maxValue = getDfbvValues(1).size-1
-                numberPicker.displayedValues = getDfbvValues(1)
+                numberPicker.maxValue = viewModel.getDfbvValues(1).size-1
+                numberPicker.displayedValues = viewModel.getDfbvValues(1)
                 radioGroup.setOnCheckedChangeListener { radioGroup, id ->
                     when (id){
-                        dialogBinding.rbFirstTry.id -> numberPicker.displayedValues = getDfbvValues(1)
-                        dialogBinding.rbSecondTry.id -> numberPicker.displayedValues = getDfbvValues(2)
-                        else -> numberPicker.displayedValues = getDfbvValues(3)
+                        dialogBinding.rbFirstTry.id -> numberPicker.displayedValues = viewModel.getDfbvValues(1)
+                        dialogBinding.rbSecondTry.id -> numberPicker.displayedValues = viewModel.getDfbvValues(2)
+                        else -> numberPicker.displayedValues = viewModel.getDfbvValues(3)
                     }
                 }
             }
@@ -111,9 +125,9 @@ class TargetAdapter(val viewModel: StationViewModel, val rule: String, val link:
                 .setPositiveButton("Speichern") { _, _ ->
                     val radioId = dialogBinding.radioGroup.checkedRadioButtonId
                     val displayedValues = when (radioId){
-                        dialogBinding.rbFirstTry.id -> getDfbvValues(1)
-                        dialogBinding.rbSecondTry.id -> getDfbvValues(2)
-                        else -> getDfbvValues(3)
+                        dialogBinding.rbFirstTry.id -> viewModel.getDfbvValues(1)
+                        dialogBinding.rbSecondTry.id -> viewModel.getDfbvValues(2)
+                        else -> viewModel.getDfbvValues(3)
                     }
 
                     val points = displayedValues[dialogBinding.numberPicker.value].toInt()
@@ -145,10 +159,6 @@ class TargetAdapter(val viewModel: StationViewModel, val rule: String, val link:
             super.onBindViewHolder(holder, position, payloads)
         }
     }
-
-
-    fun getDsbValues() = arrayOf("11", "10", "8", "5", "0")
-    fun getDfbvValues(arrow: Int) = arrayOf((24-arrow*4).toString(), (22-arrow*4).toString())
 
     override fun getItemCount() = targets.size
 }

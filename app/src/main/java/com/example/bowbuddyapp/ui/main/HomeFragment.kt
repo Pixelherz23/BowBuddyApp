@@ -48,7 +48,7 @@ class HomeFragment() : Fragment() {
     }
 
     /**
-     *Binding the the adapter to the recyler view so elements will be displayed
+     * Binding the the adapter to the recycler view so elements will be displayed
      * Adding functionaliy to the button for creating the parcours
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -111,8 +111,9 @@ class HomeFragment() : Fragment() {
 
         }
     }
+
     /**
-     *This is necessary in order to remove a parcours from the ui when the user deletes the parcours
+     * This is necessary in order to remove a parcours from the ui when the user deletes the parcours
      */
     override fun onResume() {
         super.onResume()

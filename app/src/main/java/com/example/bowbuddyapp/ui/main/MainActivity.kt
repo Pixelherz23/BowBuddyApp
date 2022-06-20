@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var acct : GoogleSignInAccount
+
     /**
      *inflating basic layout and adding functionality to the navigationdrawer
      *
@@ -47,13 +48,7 @@ class MainActivity : AppCompatActivity() {
             tvGoogleEmail.text = acct.email
             Log.i("GOOGLE", acct.photoUrl.toString())
             avGoogleImage.loadImage(acct.photoUrl)
-
-
-       
-
-                Log.i("account data", acct.displayName.toString())
-            }
-
+            Log.i("account data", acct.displayName.toString())
 
         }
         val homeFragment = HomeFragment()
@@ -112,6 +107,10 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * signs the user out
+     * @param client client to sign out
+     */
     fun signOut(client: GoogleSignInClient){
         client.signOut().addOnCompleteListener(this, object: OnCompleteListener<Void> {
             override fun onComplete(p0: Task<Void>) {

@@ -10,13 +10,22 @@ import com.example.bowbuddyapp.databinding.ActivityGameBinding
 import com.example.bowbuddyapp.viewModel.GameViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * Activity to display the data provided by [GameViewModel]
+ *
+ * @author Lukas Beckmann
+ */
+
 @AndroidEntryPoint
 class GameActivity : AppCompatActivity() {
     private val viewModel: GameViewModel by viewModels()
     private lateinit var binding: ActivityGameBinding
 
 
-
+    /**
+     * binding the Layout and observing the data from [GameViewModel] to update the ui.
+     * Initialize and bind the [StationAdapter].
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)

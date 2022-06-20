@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             avGoogleImage.loadImage(acct.photoUrl)
             Log.i("account data", acct.displayName.toString())
 
-        }
+
         val homeFragment = HomeFragment()
         val statisticsFragment = StatisticsFragment()
         val helpFragment = HelpFragment()

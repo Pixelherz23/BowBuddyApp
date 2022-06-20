@@ -10,7 +10,7 @@ import com.example.bowbuddyapp.R
 
 
 /**
- *SImple class for inflating the Help layout
+ *Simple class for inflating the Help layout
  *
  *@author Kai-U. Stieler
  */

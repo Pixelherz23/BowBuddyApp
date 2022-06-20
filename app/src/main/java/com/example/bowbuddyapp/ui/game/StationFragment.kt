@@ -55,13 +55,14 @@ class StationFragment : Fragment() {
                 playerAdapter.players = player
                 fetchAllPoints(link, stationId)
             }
-            pointsTargets.observe(viewLifecycleOwner){
-                it.forEachIndexed { index, points ->
+            pointsTargets.observe(viewLifecycleOwner){ pointsList ->
+                pointsList.forEachIndexed { index, points ->
                     targetAdapter.notifyItemChanged(index, points.points)
                 }
+                fetchAllPoints(link, stationId)
             }
-            pointsStation.observe(viewLifecycleOwner){
-                it.forEachIndexed { index, points ->
+            pointsStation.observe(viewLifecycleOwner){ pointsList ->
+                pointsList.forEachIndexed { index, points ->
                     playerAdapter.notifyItemChanged(index, points.points)
                 }
             }
@@ -86,6 +87,7 @@ class StationFragment : Fragment() {
         val link = arguments?.getString(GAME_LINK)!!
 
         viewModel.apply {
+            fetchUser(link)
             fetchAllPoints(link, acct.email!!)
             fetchAllPoints(link, stationId)
         }

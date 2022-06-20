@@ -11,6 +11,8 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:stepSize="1"
         android:value="1"
         android:valueFrom="1"
@@ -23,8 +25,10 @@
 
     <EditText
         android:id="@+id/editText_parcoursname"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="70dp"
         android:ems="10"
         android:hint="Parcoursname"
         android:inputType="textPersonName"
@@ -36,11 +40,13 @@
 
     <EditText
         android:id="@+id/editText_price"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="70dp"
         android:ems="10"
         android:hint="Preis"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/editText_street"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -49,8 +55,10 @@
 
     <EditText
         android:id="@+id/editText_street"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="70dp"
         android:ems="10"
         android:hint="Straße"
         android:inputType="textPersonName"
@@ -62,8 +70,10 @@
 
     <EditText
         android:id="@+id/editText_city"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="70dp"
         android:ems="10"
         android:hint="Stadt"
         android:inputType="textPersonName"
@@ -75,22 +85,25 @@
 
     <EditText
         android:id="@+id/editText_info"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="70dp"
         android:ems="10"
         android:hint="Infobeschreibung"
-        android:inputType="textPersonName"
+        android:inputType="textMultiLine"
         app:layout_constraintBottom_toTopOf="@+id/editText_sliderTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_city" />
 
-    <EditText
+    <TextView
         android:id="@+id/editText_sliderTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Anzahl der Stationen"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/slider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

@@ -161,7 +161,7 @@ class StationSetupActivity : AppCompatActivity() {
 
                     }
                     Log.i("stationCounter", stationCounter.toString())
-                    viewModel.setStationName(stationCounter.toString())
+                    viewModel.setStationName("Station ${stationCounter}")
 
                     var x =   intent.getStringExtra("createdParcoursId")
                     Log.i("StationSetupActivity", x.toString())

@@ -34,9 +34,6 @@ class StationViewModel @Inject constructor(private var api: ApiRequests, applica
     private val _pointsStation = MutableLiveData<MutableList<PointsStation>>()
     val pointsStation: LiveData<MutableList<PointsStation>> = _pointsStation
 
-    private val _pointsParcours = MutableLiveData<MutableList<PointsParcours>>()
-    val pointsParcours: LiveData<MutableList<PointsParcours>> = _pointsParcours
-
     private val _pbVisibility = MutableLiveData<Int>()
     val pbVisibility: LiveData<Int> = _pbVisibility
 
@@ -147,26 +144,7 @@ class StationViewModel @Inject constructor(private var api: ApiRequests, applica
         }
     }
 
-    private fun fetchPointsParcours(email: String, link: String, parcours: Int, position: Int){
-        viewModelScope.launch {
-            val response = try {
-                api.getPointsParcours(email, parcours, link)
-            } catch (e: IOException) {
-                Log.e("fetchPointsParcours", "IOException, you might not have internet connection")
 
-                return@launch
-            } catch (e: HttpException) {
-                Log.e("fetchPointsParcours", "HttpException, unexpected response")
-                return@launch
-            }
-            if (response.isSuccessful && response.body() != null) {
-                _pointsParcours.value?.set(position, response.body()!!)
-                _pointsParcours.notifyObserver()
-            } else {
-                Log.e("fetchPointsParcours", "Response not Successful: ${response.code()}")
-            }
-        }
-    }
 
 
     fun sendPoints(points: Points, position: Int) {

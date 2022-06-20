@@ -90,7 +90,7 @@ class ParcoursAdapter(private val viewModel: ParcoursViewModel) : RecyclerView.A
                 val intent = Intent(context, GameActivity::class.java)
 
                 intent.putExtra("link", viewModel.link.value)
-                //intent.putExtra("link", "https://bowbuddy.com/onsz4qLZ76")
+                //intent.putExtra("link", "https://bow-buddy.com/e490118e-2")
                 intent.putExtra("multiplayer", multiplayerFlag)
                 context.startActivity(intent)
             }

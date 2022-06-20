@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.bowbuddyapp.data.User
 import com.example.bowbuddyapp.databinding.ItemPlayerBinding
 import io.getstream.avatarview.coil.loadImage
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 class PlayerAdapter(): RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>() {
 

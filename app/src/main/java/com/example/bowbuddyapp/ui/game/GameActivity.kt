@@ -22,6 +22,7 @@ class GameActivity : AppCompatActivity() {
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val link = intent.getStringExtra("link")!!
+        val multiplayer = intent.getBooleanExtra("multiplayer", false)
 
         val stationAdapter = StationAdapter(this)
         viewModel.apply {
@@ -34,6 +35,8 @@ class GameActivity : AppCompatActivity() {
                 Log.i("GAME", game.link)
                 stationAdapter.link = game.link
                 stationAdapter.rule = game.gameRule
+                stationAdapter.parcoursId = game.idParcours
+                stationAdapter.multiplayer = multiplayer
                 viewModel.fetchStations(game.idParcours)
             }
 

@@ -34,6 +34,9 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
     val link : LiveData<String> = linkLiveData
     val game = MutableLiveData<Game>()
 
+    private val _gameExists = MutableLiveData<Boolean>()
+    val gameExists: LiveData<Boolean> = _gameExists
+
     val parcoursIdTodelete = MutableLiveData<String>()
 
     init {
@@ -111,6 +114,27 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
         }
     }
 
+    fun fetchGame(link: String){
+        viewModelScope.launch {
+            val response = try{
+                api.getGame(link)
+            } catch(e: IOException){
+                Log.e("GVM", "IOException, you might not have internet connection")
+                return@launch
+            } catch (e: HttpException){
+                Log.e("GVM", "HttpException, unexpected response")
+                return@launch
+            }
+            if(response.isSuccessful && response.body() != null) {
+                _gameExists.value = true
+            }else if(response.code() == 404){
+                _gameExists.value = false
+            }else{
+                Log.e("GVM", "Response not Successful: ${response.code()}")
+            }
+        }
+    }
+
     fun deleteParcours() : Job {
 
         var x = viewModelScope.launch() {
@@ -135,6 +159,29 @@ class ParcoursViewModel @Inject constructor(private var api: ApiRequests, applic
         }
 
         return x
+    }
+
+    fun updateUser(email: String, link: String){
+        viewModelScope.launch() {
+            val response = try{
+                api.updateUserGame(email, link)
+            } catch(e: IOException){
+                Log.e("PVM", "IOException, you might not have internet connection")
+                return@launch
+            } catch (e: HttpException){
+                Log.e("PVM", "HttpException, unexpected response")
+                return@launch
+            }
+            if(response.isSuccessful) {
+                Toast.makeText(getApplication<Application>().applicationContext
+                    , "Sending success", Toast.LENGTH_SHORT).show()
+            }else{
+                Log.e("PVM", "Response not Successful")
+                Toast.makeText(getApplication<Application>().applicationContext
+                    , "Sending failed", Toast.LENGTH_SHORT).show()
+            }
+
+        }
     }
 
 }
